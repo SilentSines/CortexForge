@@ -57,7 +57,7 @@ void btn_init(void)
 {
 	for (uint8_t i = 0; i < BTN_NUM; i++)
 	{
-		gpio_pin_init(btn_pin_table[i], GPIO_IN_PULLUP, GPIO_DRIVE_STRENGTH_MODERATE);
+		gpio_pin_init(btn_pin_table[i], GPIO_IN_PULLUP, GPIO_AF_NONE);
 	} 
 }
 

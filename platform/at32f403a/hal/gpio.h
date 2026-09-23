@@ -200,6 +200,27 @@ typedef enum
 
 typedef enum
 {
+    GPIO_AF_NONE,
+    GPIO_AF_UART,
+    GPIO_AF_SPI,
+    GPIO_AF_I2C,
+    GPIO_AF_I2S,
+    GPIO_AF_TMR,
+    GPIO_AF_ADC,
+    GPIO_AF_DAC,
+    GPIO_AF_CAN,
+    GPIO_AF_USB,
+    GPIO_AF_SDIO,
+    GPIO_AF_ETH,
+    GPIO_AF_SAI,
+    GPIO_AF_LCD,    /* RGB LCD */
+    GPIO_AF_EBI,    /* 外部总线：FSMC/FMC/XMC */
+    GPIO_AF_QSPI,
+    GPIO_AF_MAX,
+} gpio_af_t;
+
+typedef enum
+{
     EXTI_RISING,
     EXTI_FALLING,  
     EXTI_BOTH,
@@ -208,15 +229,15 @@ typedef enum
 #define GPIO_HIGH  1
 #define GPIO_LOW   0
 
-#define GPIO_OUT_H(pin)  ((gpio_type *)gpio_port_table[(pin) >> 4])->scr = gpio_pin_table[(pin) & 0xF]
-#define GPIO_OUT_L(pin)  ((gpio_type *)gpio_port_table[(pin) >> 4])->clr = gpio_pin_table[(pin) & 0xF]
-#define GPIO_TOGGLE(pin) ((gpio_type *)gpio_port_table[(pin) >> 4])->odt ^= gpio_pin_table[(pin) & 0xF]
+#define GPIO_OUT_H(pin)  (gpio_port_table[(pin) >> 4])->scr = gpio_pin_table[(pin) & 0xF]
+#define GPIO_OUT_L(pin)  (gpio_port_table[(pin) >> 4])->clr = gpio_pin_table[(pin) & 0xF]
+#define GPIO_TOGGLE(pin) (gpio_port_table[(pin) >> 4])->odt ^= gpio_pin_table[(pin) & 0xF]
 #define GPIO_READ(pin)   ((gpio_port_table[(pin) >> 4]->idt & gpio_pin_table[(pin) & 0xF]) != GPIO_LOW)
 
-extern const gpio_type *gpio_port_table[];
+extern gpio_type *gpio_port_table[];
 extern const uint16_t gpio_pin_table[16];
 
-void gpio_pin_init(gpio_pin_t pin, gpio_mode_t mode, gpio_drive_type drive);
+void gpio_pin_init(gpio_pin_t pin, gpio_mode_t mode, uint8_t af);
 void gpio_exti_init(gpio_pin_t pin, exti_edge_t edge, uint32_t irqp, cb_t func);
 
 #endif

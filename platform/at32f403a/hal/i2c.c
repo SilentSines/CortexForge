@@ -112,8 +112,8 @@ static void soft_i2c_nack(void)
 
 void soft_i2c_init(void)
 {
-	gpio_pin_init(SOFT_I2C_SCL_PIN, GPIO_OUT_OD, GPIO_DRIVE_STRENGTH_MODERATE);
-	gpio_pin_init(SOFT_I2C_SDA_PIN, GPIO_OUT_OD, GPIO_DRIVE_STRENGTH_MODERATE);
+	gpio_pin_init(SOFT_I2C_SCL_PIN, GPIO_OUT_OD, GPIO_AF_NONE);
+	gpio_pin_init(SOFT_I2C_SDA_PIN, GPIO_OUT_OD, GPIO_AF_NONE);
     
     soft_i2c_stop();
 }
@@ -320,8 +320,8 @@ static void soft_i2c_nack(soft_i2c_t *i2c)
 
 void soft_i2c_init(soft_i2c_t *i2c)
 {
-	gpio_pin_init(i2c->scl_pin, GPIO_OUT_OD, GPIO_DRIVE_STRENGTH_MODERATE);
-	gpio_pin_init(i2c->sda_pin, GPIO_OUT_OD, GPIO_DRIVE_STRENGTH_MODERATE);
+	gpio_pin_init(i2c->scl_pin, GPIO_OUT_OD, GPIO_AF_NONE);
+	gpio_pin_init(i2c->sda_pin, GPIO_OUT_OD, GPIO_AF_NONE);
 
 	soft_i2c_stop(i2c);
 }

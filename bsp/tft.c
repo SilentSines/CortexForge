@@ -25,8 +25,8 @@ static void tft_write_param(const uint8_t *param, uint32_t size)
 static void tft_init_port(void)
 {
 #if TFT_USE_SPI == 1
-    gpio_pin_init(TFT_DC_PIN, GPIO_OUT_PP, GPIO_DRIVE_STRENGTH_MODERATE);
-    gpio_pin_init(TFT_CS_PIN, GPIO_OUT_PP, GPIO_DRIVE_STRENGTH_MODERATE);
+    gpio_pin_init(TFT_DC_PIN, GPIO_OUT_PP, GPIO_AF_NONE);
+    gpio_pin_init(TFT_CS_PIN, GPIO_OUT_PP, GPIO_AF_NONE);
     TFT_DC_L();
     TFT_CS_L();
 #endif
@@ -35,7 +35,7 @@ static void tft_init_port(void)
 static void tft_init_back_light(void)
 {
 #if TFT_BL_USE_GPIO
-    gpio_pin_init(TFT_BL_PIN, GPIO_OUT_PP_LOW, GPIO_DRIVE_STRENGTH_MODERATE);
+    gpio_pin_init(TFT_BL_PIN, GPIO_OUT_PP_LOW, GPIO_AF_NONE);
 #elif TFT_BL_USE_PWM
     pwm_init(TFT_BL_PWM_CH, TFT_BL_PWM_RES, TFT_BL_PWM_FREQ, TFT_BL_PWM_POLARITY);
     pwm_start(TFT_BL_PWM_CH);
@@ -72,7 +72,7 @@ void tft_init(void)
     tft_init_port();
     tft_init_back_light();
 #ifdef TFT_RST_PIN
-    gpio_pin_init(TFT_RST_PIN, GPIO_OUT_PP, GPIO_DRIVE_STRENGTH_MODERATE);
+    gpio_pin_init(TFT_RST_PIN, GPIO_OUT_PP, GPIO_AF_NONE);
     TFT_RST_H();
     delay_ms(10);
     TFT_RST_L();

@@ -21,7 +21,7 @@ static bool encoder_en = true;
 void encoder_init(void)
 {
 	gpio_exti_init(ENC_PHASE_A_PIN, EXTI_BOTH, 0, encoder_monitor);
-	gpio_pin_init(ENC_PHASE_B_PIN, GPIO_IN_FLOATING, GPIO_DRIVE_STRENGTH_MODERATE);
+	gpio_pin_init(ENC_PHASE_B_PIN, GPIO_IN_FLOATING, GPIO_AF_NONE);
 }
 
 void encoder_monitor(void)

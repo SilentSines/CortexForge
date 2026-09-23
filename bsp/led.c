@@ -15,7 +15,7 @@ void led_init(void)
 	{
         led_off(i);
 
-		gpio_pin_init(led_pin_table[i], GPIO_OUT_PP, GPIO_DRIVE_STRENGTH_MODERATE);
+		gpio_pin_init(led_pin_table[i], GPIO_OUT_PP, GPIO_AF_NONE);
 	}
 }
 

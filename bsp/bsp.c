@@ -2,5 +2,5 @@
 
 void bsp_init(void)
 {
-    led_init();
+
 }

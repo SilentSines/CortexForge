@@ -166,7 +166,7 @@ void adc_init(adc_type *adc, bool scan_en)
 
 void adc_setup_channel(adc_ch_t ch)
 {
-    gpio_pin_init(adc_pin_table[ch].pin, GPIO_IN_ANALOG, GPIO_DRIVE_STRENGTH_MODERATE);
+    gpio_pin_init(adc_pin_table[ch].pin, GPIO_IN_ANALOG, GPIO_AF_ADC);
 }
 
 uint16_t adc_sample_one(adc_type *adc, adc_ch_t ch, adc_sampletime_select_type sample_time)

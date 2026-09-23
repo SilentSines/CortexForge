@@ -167,7 +167,7 @@ void pwm_init(pwm_pin_t pin, uint32_t res, uint32_t freq, pwm_polarity_t polarit
         return;
     }
     
-    gpio_pin_init(pwm->pin, GPIO_AF_PP, GPIO_DRIVE_STRENGTH_MODERATE);
+    gpio_pin_init(pwm->pin, GPIO_AF_PP, GPIO_AF_TMR);
     if (pwm->remap)
     {
         gpio_pin_remap_config(pwm->remap, TRUE);

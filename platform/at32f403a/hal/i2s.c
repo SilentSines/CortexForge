@@ -246,16 +246,16 @@ void i2s_bus_init(i2s_port_t i2s, i2s_mode_t mode, bool mck_en)
 		flex_req_rx = I2S4_DMA_RX_FLEX_REQ;
 	}
 	
-	gpio_pin_init(ws_pin, GPIO_AF_PP_PULLUP, GPIO_DRIVE_STRENGTH_STRONGER);
-	gpio_pin_init(ck_pin, GPIO_AF_PP_PULLUP, GPIO_DRIVE_STRENGTH_STRONGER);
-	gpio_pin_init(sd_pin, GPIO_AF_PP_PULLUP, GPIO_DRIVE_STRENGTH_STRONGER);
+	gpio_pin_init(ws_pin, GPIO_AF_PP_PULLUP, GPIO_AF_I2S);
+	gpio_pin_init(ck_pin, GPIO_AF_PP_PULLUP, GPIO_AF_I2S);
+	gpio_pin_init(sd_pin, GPIO_AF_PP_PULLUP, GPIO_AF_I2S);
 	if (mode == I2S_MASTER_FULL_DUPLEX || mode == I2S_SLAVE_FULL_DUPLEX)
 	{
-		gpio_pin_init(sdext_pin, GPIO_AF_PP_PULLUP, GPIO_DRIVE_STRENGTH_STRONGER);
+		gpio_pin_init(sdext_pin, GPIO_AF_PP_PULLUP, GPIO_AF_I2S);
 	}
 	if (mck_en)
 	{
-		gpio_pin_init(mck_pin, GPIO_AF_PP_PULLUP, GPIO_DRIVE_STRENGTH_STRONGER);
+		gpio_pin_init(mck_pin, GPIO_AF_PP_PULLUP, GPIO_AF_I2S);
 	}
 
 	crm_periph_clock_enable(clk, TRUE);

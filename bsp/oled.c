@@ -14,8 +14,8 @@ static void oled_write_cmd(uint8_t cmd)
 static void oled_init_port(void)
 {
 #if OLED_USE_SPI == 1
-    gpio_pin_init(OLED_DC_PIN, GPIO_OUT_PP, GPIO_DRIVE_STRENGTH_MODERATE);
-    gpio_pin_init(OLED_CS_PIN, GPIO_OUT_PP, GPIO_DRIVE_STRENGTH_MODERATE);
+    gpio_pin_init(OLED_DC_PIN, GPIO_OUT_PP, GPIO_AF_NONE);
+    gpio_pin_init(OLED_CS_PIN, GPIO_OUT_PP, GPIO_AF_NONE);
     OLED_DC_L();
     OLED_CS_L();
 #endif
@@ -40,7 +40,7 @@ void oled_init(void)
 {
     oled_init_port();
 
-    gpio_pin_init(OLED_RST_PIN, GPIO_OUT_PP, GPIO_DRIVE_STRENGTH_MODERATE);
+    gpio_pin_init(OLED_RST_PIN, GPIO_OUT_PP, GPIO_AF_NONE);
     OLED_RST_H();
     delay_ms(100);
     OLED_RST_L();

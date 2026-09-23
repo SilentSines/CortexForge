@@ -1,6 +1,6 @@
 #include "hal.h"
 
-const gpio_type *gpio_port_table[] = 
+gpio_type *gpio_port_table[] = 
 {
 #ifdef GPIOA
     GPIOA,
@@ -61,7 +61,7 @@ const uint16_t gpio_pin_table[16] =
 
 static cb_t exti_cb[16];
 
-void gpio_pin_init(gpio_pin_t pin, gpio_mode_t mode, gpio_drive_type drive)
+void gpio_pin_init(gpio_pin_t pin, gpio_mode_t mode, uint8_t af)
 {
     gpio_init_type gpio_cfg = {0};
     gpio_type *gpio_port;
@@ -72,12 +72,13 @@ void gpio_pin_init(gpio_pin_t pin, gpio_mode_t mode, gpio_drive_type drive)
         return;
     }
 
+    UNUSED(af);
     gpio_port = (gpio_type *)gpio_port_table[pin >> 4];
     gpio_pin = gpio_pin_table[pin & 0x0F];
 
     gpio_cfg.gpio_pins = gpio_pin;
     gpio_cfg.gpio_pull = GPIO_PULL_NONE;
-    gpio_cfg.gpio_drive_strength = drive;
+    gpio_cfg.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
     gpio_cfg.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
 
     switch (mode)

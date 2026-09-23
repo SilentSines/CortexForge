@@ -225,14 +225,14 @@ void kt_rx_port_init(void)
 
 	for (i = 0; i < KT_NUM; i++)
 	{
-        gpio_pin_init(kt_en_pin_table[i], GPIO_OUT_PP, GPIO_DRIVE_STRENGTH_MODERATE);
+        gpio_pin_init(kt_en_pin_table[i], GPIO_OUT_PP, GPIO_AF_NONE);
         GPIO_OUT_L(kt_en_pin_table[i]);
 
     #if KT_HW_MUTE_EN
     #if KT_MUTE_LEVEL
-        gpio_pin_init(kt_en_pin_table[i], GPIO_OUT_PP_HIGH, GPIO_DRIVE_STRENGTH_MODERATE);
+        gpio_pin_init(kt_en_pin_table[i], GPIO_OUT_PP_HIGH, GPIO_AF_NONE);
     #else
-        gpio_pin_init(kt_en_pin_table[i], GPIO_OUT_PP_LOW, GPIO_DRIVE_STRENGTH_MODERATE);
+        gpio_pin_init(kt_en_pin_table[i], GPIO_OUT_PP_LOW, GPIO_AF_NONE);
     #endif
     #endif
 	}

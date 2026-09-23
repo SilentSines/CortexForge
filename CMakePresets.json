@@ -13,9 +13,7 @@
             "binaryDir": "${sourceDir}/.build/at32f403a-armclang",
             "toolchainFile": "${sourceDir}/cmake/toolchain-armclang.cmake",
             "cacheVariables": {
-                "PLATFORM": "at32f403a",
-                "OPENOCD_SCRIPTS_DIR": "D:/OpenOCD/scripts",
-                "OPENOCD_EXECUTABLE": "D:/OpenOCD/bin-windows_x86/openocd.exe"
+                "PLATFORM": "at32f403a"
             }
         },
         {
@@ -25,9 +23,7 @@
             "binaryDir": "${sourceDir}/.build/at32f403a-gcc",
             "toolchainFile": "${sourceDir}/cmake/toolchain-gcc.cmake",
             "cacheVariables": {
-                "PLATFORM": "at32f403a",
-                "OPENOCD_SCRIPTS_DIR": "D:/OpenOCD/scripts",
-                "OPENOCD_EXECUTABLE": "D:/OpenOCD/bin-windows_x86/openocd.exe"
+                "PLATFORM": "at32f403a"
             }
         }
     ],

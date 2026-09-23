@@ -240,8 +240,8 @@ void uart_init(com_port_t port, uint32_t baud, uint32_t irqp)
 		default : return;
 	}
 	
-	gpio_pin_init(tx_pin, GPIO_AF_PP, GPIO_DRIVE_STRENGTH_MODERATE);
-	gpio_pin_init(rx_pin, GPIO_IN_PULLUP, GPIO_DRIVE_STRENGTH_MODERATE);
+	gpio_pin_init(tx_pin, GPIO_AF_PP, GPIO_AF_UART);
+	gpio_pin_init(rx_pin, GPIO_IN_PULLUP, GPIO_AF_UART);
 
 	crm_periph_clock_enable(clk, TRUE);
 

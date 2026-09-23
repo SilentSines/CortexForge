@@ -21,11 +21,11 @@ static struct
 
 void bat_init(void)
 {
-    gpio_pin_init(BAT_EN_PIN, GPIO_OUT_PP, GPIO_DRIVE_STRENGTH_MODERATE);
+    gpio_pin_init(BAT_EN_PIN, GPIO_OUT_PP, GPIO_AF_NONE);
 
 #if BAT_CHARGE_DETECT_EN
-    gpio_pin_init(BAT_CHG_PIN, GPIO_IN_PULLUP, GPIO_DRIVE_STRENGTH_MODERATE);
-    gpio_pin_init(BAT_STB_PIN, GPIO_IN_PULLUP, GPIO_DRIVE_STRENGTH_MODERATE);
+    gpio_pin_init(BAT_CHG_PIN, GPIO_IN_PULLUP, GPIO_AF_NONE);
+    gpio_pin_init(BAT_STB_PIN, GPIO_IN_PULLUP, GPIO_AF_NONE);
 #endif
 
     adc_setup_channel(BAT_AD_CH);

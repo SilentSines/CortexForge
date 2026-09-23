@@ -219,9 +219,9 @@ void spi_bus_init(spi_type *spi, uint8_t mode)
 	#endif
 	}
 
-	gpio_pin_init(sck_pin, GPIO_AF_PP_PULLUP, GPIO_DRIVE_STRENGTH_STRONGER);
-	gpio_pin_init(miso_pin, GPIO_AF_PP_PULLUP, GPIO_DRIVE_STRENGTH_STRONGER);
-	gpio_pin_init(mosi_pin, GPIO_AF_PP_PULLUP, GPIO_DRIVE_STRENGTH_STRONGER);
+	gpio_pin_init(sck_pin, GPIO_AF_PP_PULLUP, GPIO_AF_SPI);
+	gpio_pin_init(miso_pin, GPIO_AF_PP_PULLUP, GPIO_AF_SPI);
+	gpio_pin_init(mosi_pin, GPIO_AF_PP_PULLUP, GPIO_AF_SPI);
 
 	crm_periph_clock_enable(clk, TRUE);
 
