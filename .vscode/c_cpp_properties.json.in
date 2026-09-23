@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "name": "CortexForge",
+            "compileCommands": "${workspaceFolder}/@BUILD_OUTPUT_DIR@/compile_commands.json",
+            "defines": [@CPP_DEFINES_JSON@],
+            "cStandard": "c99",
+            "intelliSenseMode": "gcc-arm"
+        }
+    ],
+    "version": 4
+}

@@ -10,5 +10,6 @@ echo "Cleaning VS Code generated configs..."
 rm -f "$ROOT/.vscode/launch.json" && echo "  Removed launch.json" || echo "  launch.json not found"
 rm -f "$ROOT/.vscode/tasks.json" && echo "  Removed tasks.json" || echo "  tasks.json not found"
 rm -f "$ROOT/.vscode/settings.json" && echo "  Removed settings.json" || echo "  settings.json not found"
+rm -f "$ROOT/.vscode/c_cpp_properties.json" && echo "  Removed c_cpp_properties.json" || echo "  c_cpp_properties.json not found"
 
 echo "Done. Run 'cmake --preset at32f403a-gcc' to regenerate."

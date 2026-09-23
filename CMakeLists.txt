@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 project(CortexForge C ASM)
 
 set(PLATFORM "" CACHE STRING "Target platform")
@@ -132,6 +134,18 @@ else()
     set(OPENOCD_S_ARGS "")
 endif()
 message(STATUS "OpenOCD: ${OPENOCD_EXECUTABLE} ${OPENOCD_S_ARGS}")
+
+# Format PROJECT_DEFINES as JSON array for c_cpp_properties.json
+set(CPP_DEFINES_JSON "")
+set(_first TRUE)
+foreach(_def ${PROJECT_DEFINES})
+    if(NOT _first)
+        string(APPEND CPP_DEFINES_JSON ", ")
+    endif()
+    string(APPEND CPP_DEFINES_JSON "\"${_def}\"")
+    set(_first FALSE)
+endforeach()
+
 configure_file(
     "${PROJECT_ROOT}/.vscode/launch.json.in"
     "${PROJECT_ROOT}/.vscode/launch.json"
@@ -145,6 +159,11 @@ configure_file(
 configure_file(
     "${PROJECT_ROOT}/.vscode/settings.json.in"
     "${PROJECT_ROOT}/.vscode/settings.json"
+    @ONLY
+)
+configure_file(
+    "${PROJECT_ROOT}/.vscode/c_cpp_properties.json.in"
+    "${PROJECT_ROOT}/.vscode/c_cpp_properties.json"
     @ONLY
 )
 

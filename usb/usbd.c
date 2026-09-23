@@ -36,7 +36,6 @@ void usbd_init(void)
 {
     usb_clock48m_select(USB_CLK_HICK);
     crm_periph_clock_enable(CRM_USB_PERIPH_CLOCK, TRUE);
-    usbd_audio_init();
     nvic_irq_enable(USBFS_L_CAN1_RX0_IRQn, 0, 0);
     usbd_core_init(&usb_core_dev, USB, &USB_CLASS_HANDLER, &USB_DESC_HANDLER, 0);
     usbd_connect(&usb_core_dev);

@@ -34,9 +34,9 @@ extern "C" {
 #include "at32f403a_407.h"
 #include "stdio.h"
 
-// #define USB_USE_CDC
+#define USB_USE_CDC
 // #define USB_USE_CUSTOM_HID
-#define USB_USE_AUDIO
+// #define USB_USE_AUDIO
 // #define USB_USE_CDC_CUSTOM_HID
 
 /**

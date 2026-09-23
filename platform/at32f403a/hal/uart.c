@@ -551,6 +551,7 @@ void UART8_IRQHandler(void)
 #endif
 
 #ifdef STDIO_COM
+#ifdef ARM
 int fputc(int ch, FILE *f)
 {
 	UNUSED(f);
@@ -563,10 +564,28 @@ int fgetc(FILE *f)
 	uint8_t data;
 
 	UNUSED(f);
-	if (uart_recv_byte(STDIO_COM, &data) == false)
-	{
-		data = 0xFF;
-	}
+	while (uart_recv_byte(STDIO_COM, &data) == false);
 	return data;
 }
+#elif defined(GCC)
+int _write( int file, char *ptr, int len)
+{
+    UNUSED(file); 
+    uart_send(STDIO_COM, ptr, len);
+	return len;
+}
+
+int _read(int file, char *ptr, int len)
+{
+    UNUSED(file); 
+	int total = len;
+	while (total > 0)
+	{
+		int recv_len = uart_recv(STDIO_COM, ptr, total);
+		total -= recv_len;
+		ptr += recv_len;
+	}
+	return len;
+}
+#endif
 #endif

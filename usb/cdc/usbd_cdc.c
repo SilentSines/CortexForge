@@ -246,6 +246,7 @@ void usbd_cdc_clr_rx(void)
 }
 
 #ifdef STDIO_CDC
+#ifdef ARM
 int fputc(int ch, FILE *f)
 {
 	UNUSED(f);
@@ -258,12 +259,30 @@ int fgetc(FILE *f)
 	uint8_t data;
 
 	UNUSED(f);
-	if (usbd_cdc_recv_byte(&data) == false)
-	{
-		data = 0xFF;
-	}
+	while (usbd_cdc_recv_byte(&data) == false);
 	return data;
 }
+#elif defined(GCC)
+int _write( int file, char *ptr, int len)
+{
+    UNUSED(file); 
+    usbd_cdc_send(ptr, len);
+	return len;
+}
+
+int _read(int file, char *ptr, int len)
+{
+    UNUSED(file); 
+    int total = len;
+	while (total > 0)
+	{
+		int recv_len = usbd_cdc_recv(ptr, total);
+		total -= recv_len;
+		ptr += recv_len;
+	}
+	return len;
+}
+#endif
 #endif
 
 #endif
