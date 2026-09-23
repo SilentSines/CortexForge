@@ -1,0 +1,23 @@
+set(CMAKE_SYSTEM_NAME Generic)
+set(CMAKE_SYSTEM_PROCESSOR cortex-m4)
+
+if(NOT WIN32)
+    message(FATAL_ERROR "ARMCLANG is only available on Windows. Use GCC toolchain on Linux.")
+endif()
+
+set(ARMCLANG_BIN "D:/Keil_v5/ARM/ARMCLANG/Bin" CACHE PATH "ARM Compiler 6 bin directory")
+
+set(CMAKE_C_COMPILER "${ARMCLANG_BIN}/armclang.exe" CACHE FILEPATH "ARMCLANG C compiler")
+set(CMAKE_ASM_COMPILER "${ARMCLANG_BIN}/armasm.exe" CACHE FILEPATH "ARM assembler")
+set(CMAKE_LINKER "${ARMCLANG_BIN}/armlink.exe" CACHE FILEPATH "ARM linker")
+set(CMAKE_OBJCOPY "${ARMCLANG_BIN}/fromelf.exe" CACHE FILEPATH "ARM image converter")
+
+set(CMAKE_C_COMPILER_TARGET arm-arm-none-eabi)
+set(CMAKE_C_COMPILER_FORCED TRUE)
+set(CMAKE_ASM_COMPILER_FORCED TRUE)
+
+set(CMAKE_C_LINK_EXECUTABLE
+    "<CMAKE_C_COMPILER> <CMAKE_C_COMPILER_ARG1> <LINK_FLAGS> <OBJECTS> <LINK_LIBRARIES> -o <TARGET>"
+)
+
+set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)

@@ -1,0 +1,12 @@
+# BSP sources
+set(BSP_SOURCE
+    ${CMAKE_CURRENT_LIST_DIR}/bsp.c
+    ${CMAKE_CURRENT_LIST_DIR}/bat.c
+    ${CMAKE_CURRENT_LIST_DIR}/btn.c
+    ${CMAKE_CURRENT_LIST_DIR}/encoder.c
+    ${CMAKE_CURRENT_LIST_DIR}/ir.c
+    ${CMAKE_CURRENT_LIST_DIR}/kt_rx.c
+    ${CMAKE_CURRENT_LIST_DIR}/led.c
+    ${CMAKE_CURRENT_LIST_DIR}/oled.c
+    ${CMAKE_CURRENT_LIST_DIR}/tft.c
+)

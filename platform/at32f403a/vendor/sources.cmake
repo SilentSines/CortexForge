@@ -1,0 +1,28 @@
+# Vendor std library sources
+set(VENDOR_SOURCE
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_acc.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_adc.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_bpr.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_can.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_crc.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_crm.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_dac.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_debug.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_dma.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_emac.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_exint.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_flash.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_gpio.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_i2c.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_misc.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_pwc.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_rtc.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_sdio.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_spi.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_tmr.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_usart.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_usb.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_wdt.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_wwdt.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/at32f403a_407_xmc.c
+)

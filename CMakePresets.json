@@ -1,0 +1,44 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 21,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "at32f403a-armclang",
+            "displayName": "AT32F403A (ARMCLANG)",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/.build/at32f403a-armclang",
+            "toolchainFile": "${sourceDir}/cmake/toolchain-armclang.cmake",
+            "cacheVariables": {
+                "PLATFORM": "at32f403a",
+                "OPENOCD_SCRIPTS_DIR": "D:/OpenOCD/scripts",
+                "OPENOCD_EXECUTABLE": "D:/OpenOCD/bin-windows_x86/openocd.exe"
+            }
+        },
+        {
+            "name": "at32f403a-gcc",
+            "displayName": "AT32F403A (GCC)",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/.build/at32f403a-gcc",
+            "toolchainFile": "${sourceDir}/cmake/toolchain-gcc.cmake",
+            "cacheVariables": {
+                "PLATFORM": "at32f403a",
+                "OPENOCD_SCRIPTS_DIR": "D:/OpenOCD/scripts",
+                "OPENOCD_EXECUTABLE": "D:/OpenOCD/bin-windows_x86/openocd.exe"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "at32f403a-armclang",
+            "configurePreset": "at32f403a-armclang"
+        },
+        {
+            "name": "at32f403a-gcc",
+            "configurePreset": "at32f403a-gcc"
+        }
+    ]
+}

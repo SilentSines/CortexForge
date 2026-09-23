@@ -1,0 +1,16 @@
+# HAL sources
+set(HAL_SOURCE
+    ${CMAKE_CURRENT_LIST_DIR}/hal.c
+    ${CMAKE_CURRENT_LIST_DIR}/adc.c
+    ${CMAKE_CURRENT_LIST_DIR}/dma.c
+    ${CMAKE_CURRENT_LIST_DIR}/flash.c
+    ${CMAKE_CURRENT_LIST_DIR}/gpio.c
+    ${CMAKE_CURRENT_LIST_DIR}/i2c.c
+    ${CMAKE_CURRENT_LIST_DIR}/i2s.c
+    ${CMAKE_CURRENT_LIST_DIR}/pwm.c
+    ${CMAKE_CURRENT_LIST_DIR}/spi.c
+    ${CMAKE_CURRENT_LIST_DIR}/systick.c
+    ${CMAKE_CURRENT_LIST_DIR}/timer.c
+    ${CMAKE_CURRENT_LIST_DIR}/uart.c
+    ${CMAKE_CURRENT_LIST_DIR}/wdt.c
+)

@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "cwd": "${workspaceFolder}",
+            "type": "cortex-debug",
+            "request": "launch",
+            "name": "daplink Debug",
+            "servertype": "openocd",
+            "searchDir": [
+                "@OPENOCD_SCRIPTS_DIR@"
+            ],
+            "interface": "swd",
+            "configFiles": [
+                "@OPENOCD_INTERFACE@",
+                "@OPENOCD_TARGET@",
+                ".vscode/resume.cfg"
+            ],
+            "runToEntryPoint": "main",
+            "device": "@DEBUG_DEVICE@",
+            "svdFile": "${workspaceFolder}/@SVD_FILE@",
+            "loadFiles": [],
+            "symbolFiles": [
+                "./@BUILD_OUTPUT_DIR@/output/Project@PROJECT_SUFFIX@"
+            ],
+            "executable": ""
+        }
+    ]
+}
