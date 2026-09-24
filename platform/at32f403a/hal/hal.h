@@ -16,7 +16,7 @@
         __set_PRIMASK(primask_bit);             \
     } while (0)
 
-#define WDT_EN 1
+#define WDT_EN 0
 
 typedef void (*cb_t)(void);           
 typedef void (*cb_arg_t)(void*);

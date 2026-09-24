@@ -11,6 +11,7 @@
 #include "btn.h"
 #include "encoder.h"
 #include "ir.h"
+#include "wm8978.h"
 #include "kt_rx.h"
 
 #include "tft.h"

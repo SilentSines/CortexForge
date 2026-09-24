@@ -1,0 +1,10 @@
+# HAL sources
+set(HAL_SOURCE
+    ${CMAKE_CURRENT_LIST_DIR}/hal.c
+    ${CMAKE_CURRENT_LIST_DIR}/systick.c
+    ${CMAKE_CURRENT_LIST_DIR}/gpio.c
+    ${CMAKE_CURRENT_LIST_DIR}/uart.c
+    ${CMAKE_CURRENT_LIST_DIR}/timer.c
+    ${CMAKE_CURRENT_LIST_DIR}/i2c.c
+    ${CMAKE_CURRENT_LIST_DIR}/sai.c
+)

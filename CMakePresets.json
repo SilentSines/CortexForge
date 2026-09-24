@@ -25,6 +25,26 @@
             "cacheVariables": {
                 "PLATFORM": "at32f403a"
             }
+        },
+        {
+            "name": "stm32f429-armclang",
+            "displayName": "STM32F429 (ARMCLANG)",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/.build/stm32f429-armclang",
+            "toolchainFile": "${sourceDir}/cmake/toolchain-armclang.cmake",
+            "cacheVariables": {
+                "PLATFORM": "stm32f429"
+            }
+        },
+        {
+            "name": "stm32f429-gcc",
+            "displayName": "STM32F429 (GCC)",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/.build/stm32f429-gcc",
+            "toolchainFile": "${sourceDir}/cmake/toolchain-gcc.cmake",
+            "cacheVariables": {
+                "PLATFORM": "stm32f429"
+            }
         }
     ],
     "buildPresets": [
@@ -35,6 +55,14 @@
         {
             "name": "at32f403a-gcc",
             "configurePreset": "at32f403a-gcc"
+        },
+        {
+            "name": "stm32f429-armclang",
+            "configurePreset": "stm32f429-armclang"
+        },
+        {
+            "name": "stm32f429-gcc",
+            "configurePreset": "stm32f429-gcc"
         }
     ]
 }
