@@ -10,7 +10,7 @@ typedef enum
     WM8978_IN_AUX    = 0x08,
     WM8978_IN_DAC    = 0x10,
     WM8978_IN_ADC    = 0x20,
-} audio_input_t;
+} wm8978_input_t;
 
 typedef enum
 {
@@ -19,7 +19,7 @@ typedef enum
     WM8978_OUT_HP_R  = 0x02,
     WM8978_OUT_SPK   = 0x04,
     WM8978_OUT_AUX   = 0x08,
-} audio_output_t;
+} wm8978_output_t;
 
 typedef enum
 {
@@ -27,20 +27,20 @@ typedef enum
     WM8978_FORMAT_MSB      = 1,
     WM8978_FORMAT_LSB      = 0,
     WM8978_FORMAT_PCM      = 3
-} audio_format_t;
+} wm8978_format_t;
 
 typedef enum
 {
     WM8978_16BIT = 0,
     WM8978_24BIT = 2,
     WM8978_32BIT = 3
-} audio_bits_t;
+} wm8978_bits_t;
 
 void wm8978_init(void);
-void wm8978_set_cfg(audio_format_t format, audio_bits_t bits);
+void wm8978_set_cfg(wm8978_format_t format, wm8978_bits_t bits);
 void wm8978_out_mute(bool en);
 void wm8978_power_down(void);
-void wm8978_set_audio_path(audio_input_t in_path, audio_output_t out_path);
+void wm8978_set_wm8978_path(wm8978_input_t in_path, wm8978_output_t out_path);
 void wm8978_set_mic_gain(uint8_t gain);
 void wm8978_set_line_gain(uint8_t gain);
 void wm8978_set_spk_vol(uint8_t volume);

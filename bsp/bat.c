@@ -30,7 +30,7 @@ void bat_init(void)
 
     adc_setup_channel(BAT_AD_CH);
 
-    bat_ad.val = BAT_AD_INVALID;
+    bat_ad.val = ADC_SAMPLE_INVALID;
     bat_ad.min = 0xFFFF;
 
     bat_state.cur = BAT_STATE_DISCHRG;
@@ -41,8 +41,8 @@ void bat_monitor(void)
 {
     uint16_t temp;
 
-    temp = adc_sample_one(BAT_ADC, BAT_AD_CH, ADC_SAMPLETIME_239_5);
-    if (temp != 0xFFFF)
+    temp = adc_sample_one(BAT_ADC, BAT_AD_CH, ADC_SAMPLE_TIME_SLOWEST);
+    if (temp != ADC_SAMPLE_INVALID)
     {
         if (temp > bat_ad.max)
         {
@@ -106,7 +106,7 @@ uint16_t bat_get_ad(void)
 {
     uint16_t vlaue = bat_ad.val;
 
-    bat_ad.val = BAT_AD_INVALID;
+    bat_ad.val = ADC_SAMPLE_INVALID;
     return vlaue;
 }
 

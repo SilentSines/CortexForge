@@ -9,7 +9,7 @@ static void tft_write_cmd(uint8_t cmd)
 {
 #if TFT_USE_SPI == 1
     TFT_DC_L();
-    spi_set_data_size(TFT_SPI, SPI_FRAME_8BIT);
+    spi_set_data_size(TFT_SPI, SPI_DATA_SIZE_8BIT);
     spi_send_poll(TFT_SPI, &cmd, 1);
 #endif
 }
@@ -123,7 +123,7 @@ void tft_write_gram(const uint16_t *buf, uint32_t size, cb_t func)
 {
 #if TFT_USE_SPI == 1
     TFT_DC_H();
-    spi_set_data_size(TFT_SPI, SPI_FRAME_16BIT);
+    spi_set_data_size(TFT_SPI, SPI_DATA_SIZE_16BIT);
 #if TFT_USE_DMA
     spi_send_dma(TFT_SPI, buf, size, func);
     if (func == NULL)

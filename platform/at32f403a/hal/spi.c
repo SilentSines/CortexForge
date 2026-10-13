@@ -27,38 +27,39 @@ static spi_drv_t spi_drv4;
 
 static spi_drv_t* spi_select(spi_type *spi)
 {
-	spi_drv_t *spi_drv = NULL;
+#if SPI1_EN == 1
+    if (spi == SPI1) 
+    {
+        return &spi_drv1;
+    }
+#endif
 
-	if (spi == SPI1)
-	{
-	#if SPI1_EN == 1
-		spi_drv = &spi_drv1;
-	#endif
-	}
-	else if (spi == SPI2)
-	{
-	#if SPI2_EN == 1
-		spi_drv = &spi_drv2;	
-	#endif	
-	}
-	else if (spi == SPI3)
-	{
-	#if SPI3_EN == 1
-		spi_drv = &spi_drv3;
-	#endif	
-	}
-	else if (spi == SPI4)
-	{
-	#if SPI4_EN == 1
-		spi_drv = &spi_drv4;
-	#endif	
-	}
-	return spi_drv;
+#if SPI2_EN == 1
+    if (spi == SPI2) 
+    {
+        return &spi_drv2;
+    }
+#endif
+
+#if SPI3_EN == 1
+    if (spi == SPI3) 
+    {
+        return &spi_drv3;
+    }
+#endif
+
+#if SPI4_EN == 1
+    if (spi == SPI4) 
+    {
+        return &spi_drv4;
+    }
+#endif
+
+    return NULL;
 }
 
 void spi_bus_init(spi_type *spi, uint8_t mode)
 {
-	crm_periph_clock_type clk;
 	gpio_pin_t sck_pin, miso_pin, mosi_pin;
 
 	dma_type *dma_tx, *dma_rx; 
@@ -78,7 +79,8 @@ void spi_bus_init(spi_type *spi, uint8_t mode)
 
 	if (spi == SPI1)
 	{
-		clk = CRM_SPI1_PERIPH_CLOCK;
+		crm_periph_clock_enable(CRM_SPI1_PERIPH_CLOCK, TRUE);
+
 	#if SPI1_PIN_GROUP_1
 		sck_pin = GPIO_PA5;
 		miso_pin = GPIO_PA6;
@@ -114,7 +116,8 @@ void spi_bus_init(spi_type *spi, uint8_t mode)
 	}
 	else if (spi == SPI2)
 	{
-		clk = CRM_SPI2_PERIPH_CLOCK;
+		crm_periph_clock_enable(CRM_SPI2_PERIPH_CLOCK, TRUE);
+
 		sck_pin = GPIO_PB13;
 		miso_pin = GPIO_PB14;
 		mosi_pin = GPIO_PB15;
@@ -143,7 +146,8 @@ void spi_bus_init(spi_type *spi, uint8_t mode)
 	}
 	else if (spi == SPI3)
 	{
-		clk = CRM_SPI3_PERIPH_CLOCK;
+		crm_periph_clock_enable(CRM_SPI3_PERIPH_CLOCK, TRUE);
+
 	#if SPI3_PIN_GROUP_1
 		sck_pin = GPIO_PB3;
 		miso_pin = GPIO_PB4;
@@ -179,7 +183,8 @@ void spi_bus_init(spi_type *spi, uint8_t mode)
 	}
 	else if (spi == SPI4)
 	{
-		clk = CRM_SPI4_PERIPH_CLOCK;
+		crm_periph_clock_enable(CRM_SPI4_PERIPH_CLOCK, TRUE);
+
 	#if SPI4_PIN_GROUP_1
 		sck_pin = GPIO_PE2;
 		miso_pin = GPIO_PE5;
@@ -222,8 +227,6 @@ void spi_bus_init(spi_type *spi, uint8_t mode)
 	gpio_pin_init(sck_pin, GPIO_AF_PP_PULLUP, GPIO_AF_SPI);
 	gpio_pin_init(miso_pin, GPIO_AF_PP_PULLUP, GPIO_AF_SPI);
 	gpio_pin_init(mosi_pin, GPIO_AF_PP_PULLUP, GPIO_AF_SPI);
-
-	crm_periph_clock_enable(clk, TRUE);
 
 	spi_drv->bit_num = SPI_FRAME_8BIT;
 
@@ -275,29 +278,33 @@ void spi_bus_init(spi_type *spi, uint8_t mode)
 	}
 }
 
-void spi_set_speed(spi_type *spi, spi_mclk_freq_div_type baud_rate_pre)
+void spi_set_speed(spi_type *spi, spi_freq_div_t div)
 {
+	spi_mclk_freq_div_type mclk_div = (spi_mclk_freq_div_type)div;
+
 	spi->ctrl1_bit.spien = FALSE;
-	if(baud_rate_pre > SPI_MCLK_DIV_256)
+	if(mclk_div > SPI_MCLK_DIV_256)
 	{
 		spi->ctrl2_bit.mdiv_h = 1;
-		spi->ctrl1_bit.mdiv_l = baud_rate_pre & 0x7;
+		spi->ctrl1_bit.mdiv_l = mclk_div & 0x7;
 	}
 	else
 	{
 		spi->ctrl2_bit.mdiv_h = 0;
-		spi->ctrl1_bit.mdiv_l = baud_rate_pre;
+		spi->ctrl1_bit.mdiv_l = mclk_div;
 	}
 	spi->ctrl1_bit.spien = TRUE;
 }
 
-void spi_set_data_size(spi_type *spi, spi_frame_bit_num_type bit_num)
+void spi_set_data_size(spi_type *spi, spi_data_size_t size)
 {
 	spi_drv_t *spi_drv = spi_select(spi);
 	if (spi_drv == NULL)
 	{
 		return;
 	}
+
+	spi_frame_bit_num_type bit_num = (spi_frame_bit_num_type)(size);
 	if (spi_drv->bit_num == bit_num)
 	{
 		return;

@@ -19,33 +19,35 @@ static i2s_drv_t i2s_drv4;
 
 static i2s_drv_t* i2s_select(i2s_port_t i2s)
 {
-	i2s_drv_t *i2s_drv = NULL;
+#if I2S1_EN == 1
+    if (i2s == I2S1) 
+    {
+        return &i2s_drv1;
+    }
+#endif
 
-	if (i2s == I2S1)
-	{
-	#if I2S1_EN == 1
-		i2s_drv = &i2s_drv1;
-	#endif
-	}
-	else if (i2s == I2S2)
-	{
-	#if I2S2_EN == 1
-		i2s_drv = &i2s_drv2;
-	#endif
-	}
-	else if (i2s == I2S3)
-	{
-	#if I2S3_EN == 1
-		i2s_drv = &i2s_drv3;
-	#endif
-	}
-	else if (i2s == I2S4)
-	{
-	#if I2S4_EN == 1
-		i2s_drv = &i2s_drv4;
-	#endif
-	}
-	return i2s_drv;
+#if I2S2_EN == 1
+    if (i2s == I2S2) 
+    {
+        return &i2s_drv2;
+    }
+#endif
+
+#if I2S3_EN == 1
+    if (i2s == I2S3) 
+    {
+        return &i2s_drv3;
+    }
+#endif
+
+#if I2S4_EN == 1
+    if (i2s == I2S4) 
+    {
+        return &i2s_drv4;
+    }
+#endif
+
+    return NULL;
 }
 
 static void spi_drv_select(i2s_port_t i2s, spi_type **spi, spi_type **i2s_ext)
@@ -61,7 +63,6 @@ static void spi_drv_select(i2s_port_t i2s, spi_type **spi, spi_type **i2s_ext)
 
 void i2s_bus_init(i2s_port_t i2s, i2s_mode_t mode, bool mck_en)
 {
-	crm_periph_clock_type clk;
 	spi_type *spi, *i2s_ext;
 	gpio_pin_t ws_pin, ck_pin, sdext_pin, sd_pin, mck_pin;
 
@@ -81,7 +82,8 @@ void i2s_bus_init(i2s_port_t i2s, i2s_mode_t mode, bool mck_en)
 
 	if (i2s == I2S1)
 	{
-		clk = CRM_SPI1_PERIPH_CLOCK;
+		crm_periph_clock_enable(CRM_SPI1_PERIPH_CLOCK, TRUE);
+
 	#if I2S1_PIN_GROUP_1
 		ws_pin = GPIO_PA4;
 		ck_pin = GPIO_PA5;
@@ -126,7 +128,7 @@ void i2s_bus_init(i2s_port_t i2s, i2s_mode_t mode, bool mck_en)
 	}
 	else if (i2s == I2S2)
 	{
-		clk = CRM_SPI2_PERIPH_CLOCK;
+		crm_periph_clock_enable(CRM_SPI2_PERIPH_CLOCK, TRUE);
 
 		ws_pin = GPIO_PB12;
 		ck_pin = GPIO_PB13;
@@ -157,7 +159,8 @@ void i2s_bus_init(i2s_port_t i2s, i2s_mode_t mode, bool mck_en)
 	}
 	else if (i2s == I2S3)
 	{
-		clk = CRM_SPI3_PERIPH_CLOCK;
+		crm_periph_clock_enable(CRM_SPI3_PERIPH_CLOCK, TRUE);
+
 	#if I2S3_PIN_GROUP_1
 		ws_pin = GPIO_PA15;
 		ck_pin = GPIO_PB3;
@@ -202,7 +205,8 @@ void i2s_bus_init(i2s_port_t i2s, i2s_mode_t mode, bool mck_en)
 	}
 	else if (i2s == I2S4)
 	{
-		clk = CRM_SPI4_PERIPH_CLOCK;
+		crm_periph_clock_enable(CRM_SPI4_PERIPH_CLOCK, TRUE);
+		
 	#if I2S4_PIN_GROUP_1
 		ws_pin = GPIO_PE4;
 		ck_pin = GPIO_PE2;
@@ -258,13 +262,12 @@ void i2s_bus_init(i2s_port_t i2s, i2s_mode_t mode, bool mck_en)
 		gpio_pin_init(mck_pin, GPIO_AF_PP_PULLUP, GPIO_AF_I2S);
 	}
 
-	crm_periph_clock_enable(clk, TRUE);
 	spi_drv_select(i2s, &spi, &i2s_ext);
 
 	i2s_drv->mode = mode;
 	i2s_drv->mck_en = mck_en;
 	i2s_drv->format = I2S_DATA_16BIT_CHANNEL_16BIT;
-	i2s_set_cfg(i2s, I2S_AUDIO_FREQUENCY_8K, I2S_DATA_16BIT_CHANNEL_16BIT);
+	i2s_set_cfg(i2s, I2S_SAMPLE_RATE_8K, I2S_FMT_DATA16_CH16);
 	
 	if (mode != I2S_MASTER_HALF_RX && mode != I2S_SLAVE_HALF_RX)//TX DMA
 	{
@@ -317,7 +320,7 @@ void i2s_bus_init(i2s_port_t i2s, i2s_mode_t mode, bool mck_en)
 	}
 }
 
-void i2s_set_cfg(i2s_port_t i2s, i2s_audio_sampling_freq_type samplerate, i2s_data_channel_format_type format)
+void i2s_set_cfg(i2s_port_t i2s, i2s_sample_rate_t samplerate, i2s_format_t format)
 {
 	spi_type *spi, *i2s_ext;
 	i2s_mode_t mode;
@@ -332,7 +335,7 @@ void i2s_set_cfg(i2s_port_t i2s, i2s_audio_sampling_freq_type samplerate, i2s_da
 	
 	spi_drv_select(i2s, &spi, &i2s_ext);
 
-	i2s_drv->format = format;
+	i2s_drv->format = (i2s_data_channel_format_type)(format + 1);
 	mode = i2s_drv->mode;
 	mck_en = i2s_drv->mck_en;
 
@@ -349,9 +352,9 @@ void i2s_set_cfg(i2s_port_t i2s, i2s_audio_sampling_freq_type samplerate, i2s_da
 		case I2S_SLAVE_HALF_RX :		i2s_cfg.operation_mode = I2S_MODE_SLAVE_RX; break;
 	}
 	i2s_cfg.audio_protocol = I2S_AUDIO_PROTOCOL_PHILLIPS;
-	i2s_cfg.data_channel_format = format;
+	i2s_cfg.data_channel_format = (i2s_data_channel_format_type)(format + 1);
 	i2s_cfg.mclk_output_enable = (mck_en) ? TRUE : FALSE;
-	i2s_cfg.audio_sampling_freq = samplerate;
+	i2s_cfg.audio_sampling_freq = (i2s_audio_sampling_freq_type)samplerate;
 	i2s_cfg.clock_polarity = I2S_CLOCK_POLARITY_LOW;
 	i2s_init(spi, &i2s_cfg);
   

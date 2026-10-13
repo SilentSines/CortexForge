@@ -6,24 +6,21 @@
 #define GAIN_MAX		63		
 #define GAIN_STEP		1	
 
-#define WM8978_USE_I2C                  0
-#define WM8978_USE_SOFT_I2C_SIGNAL      1
-#define WM8978_USE_SOFT_I2C_MULTIPLE    0
+#define WM8978_USE_I2C               0
+#define WM8978_USE_I2C_SW_FIXED      0
+#define WM8978_USE_I2C_SW_INSTANCE   1
 
 #if WM8978_USE_I2C
     #define WM8978_I2C I2C2
     #define WM8978_I2C_INIT()               {}
-    #define WM8978_I2C_SEND(reg, buf, size) i2c_send(WM8978_I2C, WM8978_I2C_ADDR, reg, I2C_ADDR_8BIT, buf, size)    
-#elif WM8978_USE_SOFT_I2C_SIGNAL
+    #define WM8978_I2C_SEND(reg, buf, size) i2c_send(WM8978_I2C, WM8978_I2C_ADDR, reg, I2C_REG_ADDR_8BIT, buf, size)    
+#elif WM8978_USE_I2C_SW_FIXED
     #define WM8978_I2C_INIT()               {}
-    #define WM8978_I2C_SEND(reg, buf, size) soft_i2c_send(WM8978_I2C_ADDR, reg, I2C_ADDR_8BIT, buf, size)  
-#elif WM8978_USE_SOFT_I2C_MULTIPLE
-    #define WM8978_SCL_PORT     GPIOB
-    #define WM8978_SCL_PIN      GPIO_Pin_6
-    #define WM8978_SDA_PORT     GPIOB
-    #define WM8978_SDA_PIN      GPIO_Pin_7
-    #define WM8978_I2C_INIT()               soft_i2c_init(&i2c)
-    #define WM8978_I2C_SEND(reg, buf, size) soft_i2c_send(&i2c, WM8978_I2C_ADDR, reg, I2C_ADDR_8BIT, buf, size)  
+    #define WM8978_I2C_SEND(reg, buf, size) i2c_sw_send(WM8978_I2C_ADDR, reg, I2C_REG_ADDR_8BIT, buf, size)  
+#elif WM8978_USE_I2C_SW_INSTANCE
+    #define WM8978_I2C_INIT()               i2c_sw_init(&i2c)
+    #define WM8978_I2C_SEND(reg, buf, size) i2c_sw_send(&i2c, WM8978_I2C_ADDR, reg, I2C_REG_ADDR_8BIT, buf, size)  
+	static i2c_sw_t i2c = {GPIO_PB6, GPIO_PB7, 5};
 #endif
 
 static const uint16_t reg_default[] = 
@@ -37,10 +34,6 @@ static const uint16_t reg_default[] =
 	0x100, 0x002, 0x001, 0x001, 0x039, 0x039, 0x039, 0x039,
 	0x001, 0x001
 };
-
-#if WM8978_USE_SOFT_I2C_MULTIPLE
-static soft_i2c_t i2c = {WM8978_SCL_PORT, WM8978_SCL_PIN, WM8978_SDA_PORT, WM8978_SDA_PIN, 5};
-#endif
 
 static uint16_t reg_val[] = 
 {
@@ -86,12 +79,12 @@ void wm8978_init(void)
 	WM8978_I2C_INIT();
 	wm8978_reset();	
 	wm8978_set_cfg(WM8978_FORMAT_PHILLIPS, WM8978_16BIT);
-	wm8978_set_audio_path(WM8978_IN_DAC | WM8978_IN_LINE, WM8978_OUT_SPK | WM8978_OUT_HP_L | WM8978_OUT_HP_R);
+	wm8978_set_wm8978_path(WM8978_IN_DAC | WM8978_IN_LINE, WM8978_OUT_SPK | WM8978_OUT_HP_L | WM8978_OUT_HP_R);
 	wm8978_set_ear_vol(55);
 	wm8978_set_spk_vol(40);
 }
 
-void wm8978_set_cfg(audio_format_t format, audio_bits_t bits)
+void wm8978_set_cfg(wm8978_format_t format, wm8978_bits_t bits)
 {
 	uint16_t data = 0;
 
@@ -142,7 +135,7 @@ void wm8978_power_down(void)
 	wm8978_reset();			
 }
 
-void wm8978_set_audio_path(audio_input_t in_path, audio_output_t out_path)
+void wm8978_set_wm8978_path(wm8978_input_t in_path, wm8978_output_t out_path)
 {
 	uint16_t data;
 

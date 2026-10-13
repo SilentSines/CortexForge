@@ -31,7 +31,7 @@
 extern "C" {
 #endif
 
-#include "at32f403a_407.h"
+#include "hal.h"
 #include "stdio.h"
 
 #define USB_USE_CDC

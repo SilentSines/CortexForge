@@ -79,7 +79,7 @@
 
 #define DCDC_EN           1 //DCDC使能位：0：关闭；1：使能。
 
-#define AUTOMUTE_EN 						//undefine to disable automute    自动静音
+// #define AUTOMUTE_EN 						//undefine to disable automute    自动静音
 //#define SQUEAL_EN 						//undefine to disable squeal 				啸叫
 //#define I2S_EN
 
@@ -100,8 +100,8 @@
 //#define AUTOMUTE_SNR_LOWTH	   130
 //#define AUTOMUTE_SNR_HIGHTH	   148
 
-#define AUTOMUTE_SNR_LOWTH	   130     //  输入-84 -10（衰减）对应值 -94   
-#define AUTOMUTE_SNR_HIGHTH	   138     //  输入-80 -10（衰减）对应值 -90
+#define AUTOMUTE_SNR_LOWTH	   115     //  输入-84 -10（衰减）对应值 -94   
+#define AUTOMUTE_SNR_HIGHTH	   123     //  输入-80 -10（衰减）对应值 -90
 
 
 //#define AUTOMUTE_SNR_LOWTH	   100     // 
@@ -495,9 +495,5 @@ void  KT_WirelessMicRx_SetMaxRfGain(uint8_t sel);//输入范围0-3 对应36，40
         #define chipBM 8
     #endif
 #endif
-
-#define ADDR_PIN 1
-#define KT0656M_SLAVE_ADDR  (0x31 | (ADDR_PIN << 3))
-#define KT0650_SLAVE_ADDR   (0x35 | (ADDR_PIN << 3))
 
 #endif

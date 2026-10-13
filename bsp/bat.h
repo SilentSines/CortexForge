@@ -12,7 +12,6 @@
 
 #define BAT_ADC         ADC1
 #define BAT_AD_CH       ADC123_CH0_PA0
-#define BAT_AD_INVALID  0xFFFF
 
 typedef enum 
 {

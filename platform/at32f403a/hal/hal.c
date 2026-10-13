@@ -40,17 +40,6 @@ static void system_clock_config(void)
 	crm_auto_step_mode_enable(FALSE);
 	/* update system_core_clock global variable */
 	system_core_clock_update();
-
-	crm_periph_clock_enable(CRM_GPIOA_PERIPH_CLOCK, TRUE);
-	crm_periph_clock_enable(CRM_GPIOB_PERIPH_CLOCK, TRUE);
-	crm_periph_clock_enable(CRM_GPIOC_PERIPH_CLOCK, TRUE);
-	// crm_periph_clock_enable(CRM_GPIOD_PERIPH_CLOCK, TRUE);
-	// crm_periph_clock_enable(CRM_GPIOE_PERIPH_CLOCK, TRUE);
-	crm_periph_clock_enable(CRM_DMA1_PERIPH_CLOCK, TRUE);
-	crm_periph_clock_enable(CRM_DMA2_PERIPH_CLOCK, TRUE);
-
-	crm_periph_clock_enable(CRM_IOMUX_PERIPH_CLOCK, TRUE);
-	gpio_pin_remap_config(SWJTAG_GMUX_010, TRUE);
 }
 
 static void nvic_config(void)
@@ -70,6 +59,18 @@ void hal_init(void)
 	__enable_irq();
 	system_clock_config();
 	nvic_config();
+
+	crm_periph_clock_enable(CRM_GPIOA_PERIPH_CLOCK, TRUE);
+	crm_periph_clock_enable(CRM_GPIOB_PERIPH_CLOCK, TRUE);
+	crm_periph_clock_enable(CRM_GPIOC_PERIPH_CLOCK, TRUE);
+	// crm_periph_clock_enable(CRM_GPIOD_PERIPH_CLOCK, TRUE);
+	// crm_periph_clock_enable(CRM_GPIOE_PERIPH_CLOCK, TRUE);
+	crm_periph_clock_enable(CRM_DMA1_PERIPH_CLOCK, TRUE);
+	crm_periph_clock_enable(CRM_DMA2_PERIPH_CLOCK, TRUE);
+
+	crm_periph_clock_enable(CRM_IOMUX_PERIPH_CLOCK, TRUE);
+	gpio_pin_remap_config(SWJTAG_GMUX_010, TRUE);
+
 	systick_init();
 }
 

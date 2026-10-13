@@ -95,7 +95,6 @@ static uart_t* uart_select(com_port_t port)
 void uart_init(com_port_t port, uint32_t baud, uint32_t irqp)
 {
 	IRQn_Type irq;
-	crm_periph_clock_type clk;
 	gpio_pin_t tx_pin, rx_pin;
 	uart_t *com = uart_select(port);
 
@@ -105,7 +104,7 @@ void uart_init(com_port_t port, uint32_t baud, uint32_t irqp)
 	}
 	switch (port)
 	{
-		case COM1 :	clk = CRM_USART1_PERIPH_CLOCK;
+		case COM1 :	crm_periph_clock_enable(CRM_USART1_PERIPH_CLOCK, TRUE);
 					irq = USART1_IRQn;
 				#if UART1_PIN_GROUP_1
 					tx_pin = GPIO_PA9;
@@ -121,7 +120,7 @@ void uart_init(com_port_t port, uint32_t baud, uint32_t irqp)
 				#endif
 					break;
 	
-		case COM2 :	clk = CRM_USART2_PERIPH_CLOCK;
+		case COM2 :	crm_periph_clock_enable(CRM_USART2_PERIPH_CLOCK, TRUE);
 					irq = USART2_IRQn;
 				#if UART2_PIN_GROUP_1
 					tx_pin = GPIO_PA2;
@@ -137,7 +136,7 @@ void uart_init(com_port_t port, uint32_t baud, uint32_t irqp)
 				#endif
 					break;	
 
-		case COM3 :	clk = CRM_USART3_PERIPH_CLOCK;
+		case COM3 :	crm_periph_clock_enable(CRM_USART3_PERIPH_CLOCK, TRUE);
 					irq = USART3_IRQn;
 				#if UART3_PIN_GROUP_1
 					tx_pin = GPIO_PB10;
@@ -157,7 +156,7 @@ void uart_init(com_port_t port, uint32_t baud, uint32_t irqp)
 				#endif
 					break;
 	
-		case COM4 :	clk = CRM_UART4_PERIPH_CLOCK;
+		case COM4 :	crm_periph_clock_enable(CRM_UART4_PERIPH_CLOCK, TRUE);
 					irq = UART4_IRQn;
 				#if UART4_PIN_GROUP_1
 					tx_pin = GPIO_PC10;
@@ -173,7 +172,7 @@ void uart_init(com_port_t port, uint32_t baud, uint32_t irqp)
 				#endif	
 					break;
 
-		case COM5 :	clk = CRM_UART5_PERIPH_CLOCK;
+		case COM5 :	crm_periph_clock_enable(CRM_UART5_PERIPH_CLOCK, TRUE);
 					irq = UART5_IRQn;
 				#if UART5_PIN_GROUP_1
 					tx_pin = GPIO_PC12;
@@ -189,7 +188,7 @@ void uart_init(com_port_t port, uint32_t baud, uint32_t irqp)
 				#endif	
 					break;
 
-		case COM6 :	clk = CRM_USART6_PERIPH_CLOCK;
+		case COM6 :	crm_periph_clock_enable(CRM_USART6_PERIPH_CLOCK, TRUE);
 					irq = USART6_IRQn;
 				#if UART6_PIN_GROUP_1
 					tx_pin = GPIO_PC6;
@@ -205,7 +204,7 @@ void uart_init(com_port_t port, uint32_t baud, uint32_t irqp)
 				#endif	
 					break;
 
-		case COM7 :	clk = CRM_UART7_PERIPH_CLOCK;
+		case COM7 :	crm_periph_clock_enable(CRM_UART7_PERIPH_CLOCK, TRUE);
 					irq = UART7_IRQn;
 				#if UART7_PIN_GROUP_1
 					tx_pin = GPIO_PE8;
@@ -221,7 +220,7 @@ void uart_init(com_port_t port, uint32_t baud, uint32_t irqp)
 				#endif	
 					break;
 
-		case COM8 :	clk = CRM_UART8_PERIPH_CLOCK;
+		case COM8 :	crm_periph_clock_enable(CRM_UART8_PERIPH_CLOCK, TRUE);
 					irq = UART8_IRQn;
 				#if UART8_PIN_GROUP_1
 					tx_pin = GPIO_PE1;
@@ -242,8 +241,6 @@ void uart_init(com_port_t port, uint32_t baud, uint32_t irqp)
 	
 	gpio_pin_init(tx_pin, GPIO_AF_PP, GPIO_AF_UART);
 	gpio_pin_init(rx_pin, GPIO_IN_PULLUP, GPIO_AF_UART);
-
-	crm_periph_clock_enable(clk, TRUE);
 
 	usart_init(com->uart, baud, USART_DATA_8BITS, USART_STOP_1_BIT);
 	usart_transmitter_enable(com->uart, TRUE);

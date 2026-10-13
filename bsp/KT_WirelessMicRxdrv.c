@@ -97,32 +97,30 @@ strI2s chipBI2sConfig={KT_I2S_LRCLK96K,KT_I2S_MCLK12P288M,KT_I2S_MASTER,KT_I2S_S
 //修 改 者：                        时间：                                
 //版    本：V0.1    For KT0656M                                                                    
 //-----------------------------------------------------------------------------
-static void KT_Bus_Write(uint16_t Register_Address, uint8_t Byte_Data,uint8_t chipNum)
-{
-   switch(chipNum)
-   {
-#ifdef DIVERSITY
-   #ifdef TWOCHANNEL
-       case 0: I2C_Byte_Write(KTWirelessMicRxw_addressAM,Register_Address,Byte_Data);break;
-       case 1: I2C_Byte_Write(KTWirelessMicRxw_addressAS,Register_Address,Byte_Data);break;
-       case 2: I2C_Byte_Write(KTWirelessMicRxw_addressBM,Register_Address,Byte_Data);break;
-       case 3: I2C_Byte_Write(KTWirelessMicRxw_addressBS,Register_Address,Byte_Data);break;
-   #else
-       case 0: I2C_Byte_Write(KTWirelessMicRxw_addressAM,Register_Address,Byte_Data);break;
-       case 1: I2C_Byte_Write(KTWirelessMicRxw_addressAS,Register_Address,Byte_Data);break;
-      #endif
-#else
-   #ifdef TWOCHANNEL
-    //    case 0: I2C_Byte_Write(KTWirelessMicRxw_addressAM,Register_Address,Byte_Data);break;
-    //    case 1: I2C_Byte_Write(KTWirelessMicRxw_addressBM,Register_Address,Byte_Data);break;
-        case 0: I2C_Byte_Write(KT0656M_SLAVE_ADDR,Register_Address,Byte_Data);break;
-        case 1: I2C_Byte_Write(KT0650_SLAVE_ADDR,Register_Address,Byte_Data);break;
-      #else
-       case 0: I2C_Byte_Write(KTWirelessMicRxw_addressAM,Register_Address,Byte_Data);break;
-      #endif
-#endif
-   }
-}
+// static void KT_Bus_Write(uint16_t Register_Address, uint8_t Byte_Data,uint8_t chipNum)
+// {
+//    switch(chipNum)
+//    {
+// #ifdef DIVERSITY
+//    #ifdef TWOCHANNEL
+//        case 0: I2C_Byte_Write(KTWirelessMicRxw_addressAM,Register_Address,Byte_Data);break;
+//        case 1: I2C_Byte_Write(KTWirelessMicRxw_addressAS,Register_Address,Byte_Data);break;
+//        case 2: I2C_Byte_Write(KTWirelessMicRxw_addressBM,Register_Address,Byte_Data);break;
+//        case 3: I2C_Byte_Write(KTWirelessMicRxw_addressBS,Register_Address,Byte_Data);break;
+//    #else
+//        case 0: I2C_Byte_Write(KTWirelessMicRxw_addressAM,Register_Address,Byte_Data);break;
+//        case 1: I2C_Byte_Write(KTWirelessMicRxw_addressAS,Register_Address,Byte_Data);break;
+//       #endif
+// #else
+//    #ifdef TWOCHANNEL
+//        case 0: I2C_Byte_Write(KTWirelessMicRxw_addressAM,Register_Address,Byte_Data);break;
+//        case 1: I2C_Byte_Write(KTWirelessMicRxw_addressBM,Register_Address,Byte_Data);break;
+//       #else
+//        case 0: I2C_Byte_Write(KTWirelessMicRxw_addressAM,Register_Address,Byte_Data);break;
+//       #endif
+// #endif
+//    }
+// }
 
 
 
@@ -137,33 +135,31 @@ static void KT_Bus_Write(uint16_t Register_Address, uint8_t Byte_Data,uint8_t ch
 //修 改 者：                        时间：                                
 //版    本：V0.1    For KT0656M                                                                    
 //-----------------------------------------------------------------------------
-static uint8_t KT_Bus_Read(uint16_t Register_Address,uint8_t chipNum)
-{
-    switch(chipNum)
-    {
-#ifdef DIVERSITY
-    #ifdef TWOCHANNEL
-        case 0: return( I2C_Byte_Read(KTWirelessMicRxr_addressAM, Register_Address) );break;
-        case 1: return( I2C_Byte_Read(KTWirelessMicRxr_addressAS, Register_Address) );break;
-        case 2: return( I2C_Byte_Read(KTWirelessMicRxr_addressBM, Register_Address) );break;
-        case 3: return( I2C_Byte_Read(KTWirelessMicRxr_addressBS, Register_Address) );break;
-    #else
-        case 0: return( I2C_Byte_Read(KTWirelessMicRxr_addressAM, Register_Address) );break;
-        case 1: return( I2C_Byte_Read(KTWirelessMicRxr_addressAS, Register_Address) );break;
-       #endif
-#else
-    #ifdef TWOCHANNEL
-    //    case 0: return( I2C_Byte_Read(KTWirelessMicRxr_addressAM, Register_Address) );break;
-    //    case 1: return( I2C_Byte_Read(KTWirelessMicRxr_addressBM, Register_Address) );break;
-       case 0: return( I2C_Byte_Read(KT0656M_SLAVE_ADDR, Register_Address) );break;
-       case 1: return( I2C_Byte_Read(KT0650_SLAVE_ADDR, Register_Address) );break;
-       #else
-        case 0: return( I2C_Byte_Read(KTWirelessMicRxr_addressAM, Register_Address) );break;
-       #endif
-#endif
-		default:while(1);
-    }
-}
+// static uint8_t KT_Bus_Read(uint16_t Register_Address,uint8_t chipNum)
+// {
+//     switch(chipNum)
+//     {
+// #ifdef DIVERSITY
+//     #ifdef TWOCHANNEL
+//         case 0: return( I2C_Byte_Read(KTWirelessMicRxr_addressAM, Register_Address) );break;
+//         case 1: return( I2C_Byte_Read(KTWirelessMicRxr_addressAS, Register_Address) );break;
+//         case 2: return( I2C_Byte_Read(KTWirelessMicRxr_addressBM, Register_Address) );break;
+//         case 3: return( I2C_Byte_Read(KTWirelessMicRxr_addressBS, Register_Address) );break;
+//     #else
+//         case 0: return( I2C_Byte_Read(KTWirelessMicRxr_addressAM, Register_Address) );break;
+//         case 1: return( I2C_Byte_Read(KTWirelessMicRxr_addressAS, Register_Address) );break;
+//        #endif
+// #else
+//     #ifdef TWOCHANNEL
+//        case 0: return( I2C_Byte_Read(KTWirelessMicRxr_addressAM, Register_Address) );break;
+//        case 1: return( I2C_Byte_Read(KTWirelessMicRxr_addressBM, Register_Address) );break;
+//        #else
+//         case 0: return( I2C_Byte_Read(KTWirelessMicRxr_addressAM, Register_Address) );break;
+//        #endif
+// #endif
+// 		default:while(1);
+//     }
+// }
 
 //-----------------------------------------------------------------------------
 //函 数 名：KT_WirelessMicRx_PreInit                                                 

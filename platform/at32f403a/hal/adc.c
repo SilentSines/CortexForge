@@ -35,27 +35,28 @@ static adc_drv_t adc_drv3;
 
 static adc_drv_t* adc_select(adc_type *adc)
 {
-    adc_drv_t *adc_drv = NULL;
+#if ADC1_EN == 1
+    if (adc == ADC1) 
+    {
+        return &adc_drv1;
+    }
+#endif
 
-    if (adc == ADC1)
+#if ADC2_EN == 1
+    if (adc == ADC2) 
     {
-    #if ADC1_EN == 1
-		adc_drv = &adc_drv1;
-	#endif
+        return &adc_drv2;
     }
-    else if (adc == ADC2)
+#endif
+
+#if ADC3_EN == 1
+    if (adc == ADC3) 
     {
-    #if ADC2_EN == 1
-		adc_drv = &adc_drv2;
-	#endif
+        return &adc_drv3;
     }
-    else if (adc == ADC3)
-    {
-    #if ADC3_EN == 1
-		adc_drv = &adc_drv3;
-	#endif
-    }
-    return adc_drv;
+#endif
+
+    return NULL;
 }
 
 static bool is_channel_supported(adc_type *adc, adc_ch_t ch)
@@ -69,6 +70,19 @@ static bool is_channel_supported(adc_type *adc, adc_ch_t ch)
         return true;
     }
     return true;
+}
+
+static adc_sampletime_select_type map_sample_time(adc_sample_time_t sample_time)
+{
+    switch (sample_time) 
+    {
+        case ADC_SAMPLE_TIME_FASTEST: return ADC_SAMPLETIME_1_5;
+        case ADC_SAMPLE_TIME_FAST:    return ADC_SAMPLETIME_7_5;
+        case ADC_SAMPLE_TIME_MEDIUM:  return ADC_SAMPLETIME_28_5;
+        case ADC_SAMPLE_TIME_SLOW:    return ADC_SAMPLETIME_71_5;
+        case ADC_SAMPLE_TIME_SLOWEST: return ADC_SAMPLETIME_239_5;
+        default:                      return ADC_SAMPLETIME_28_5;
+    }
 }
 
 void adc_init(adc_type *adc, bool scan_en)
@@ -166,27 +180,32 @@ void adc_init(adc_type *adc, bool scan_en)
 
 void adc_setup_channel(adc_ch_t ch)
 {
+    if (ch >= ADC_CH_MAX) 
+    {
+        return;
+    }
+    
     gpio_pin_init(adc_pin_table[ch].pin, GPIO_IN_ANALOG, GPIO_AF_ADC);
 }
 
-uint16_t adc_sample_one(adc_type *adc, adc_ch_t ch, adc_sampletime_select_type sample_time)
+uint16_t adc_sample_one(adc_type *adc, adc_ch_t ch, adc_sample_time_t sample_time)
 {
     adc_drv_t *adc_drv = adc_select(adc);
 
     if (adc_drv == NULL)
     {
-        return 0xFFFF;
+        return ADC_SAMPLE_INVALID;
     }
 
     if (is_channel_supported(adc, ch) == false)
     {
-        return 0xFFFF;
+        return ADC_SAMPLE_INVALID;
     }
     
     if (adc_drv->sampleone_ch != ch)
     {
         adc_drv->sampleone_ch = ch;
-        adc_ordinary_channel_set(adc, adc_pin_table[ch].channel, 1, sample_time);
+        adc_ordinary_channel_set(adc, adc_pin_table[ch].channel, 1, map_sample_time(sample_time));
         adc_drv->sampling = false;
     }
 
@@ -194,23 +213,25 @@ uint16_t adc_sample_one(adc_type *adc, adc_ch_t ch, adc_sampletime_select_type s
     {
         adc_ordinary_software_trigger_enable(adc, true);
         adc_drv->sampling = true;
-        return 0xFFFF;
+        return ADC_SAMPLE_INVALID;
     }
     else
     {
         if (adc_flag_get(adc, ADC_CCE_FLAG) == SET)
         {
+            uint16_t data = adc_ordinary_conversion_data_get(adc);
+            adc_flag_clear(adc, ADC_CCE_FLAG);
             adc_drv->sampling = false;
-            return adc_ordinary_conversion_data_get(adc);
+            return data;
         }
         else
         {
-            return 0xFFFF;
+            return ADC_SAMPLE_INVALID;
         }
     }
 }
 
-void adc_dma_config(adc_type *adc, adc_ch_t *ch, uint8_t ch_num, adc_sampletime_select_type sample_time)
+void adc_dma_config(adc_type *adc, adc_ch_t *ch, uint8_t ch_num, adc_sample_time_t sample_time)
 {
     uint8_t i;
     adc_drv_t *adc_drv = adc_select(adc);
@@ -230,7 +251,7 @@ void adc_dma_config(adc_type *adc, adc_ch_t *ch, uint8_t ch_num, adc_sampletime_
             return;
         }
 
-        adc_ordinary_channel_set(adc, adc_pin_table[ch[i]].channel, i, sample_time);
+        adc_ordinary_channel_set(adc, adc_pin_table[ch[i]].channel, i, map_sample_time(sample_time));
     }
 }
 
@@ -252,8 +273,9 @@ void adc_dma_start(adc_type *adc, uint16_t *buf, uint32_t len, cb_t func)
 	dma_channel_enable(adc_drv->dma, TRUE);
 	dma_interrupt_enable(adc_drv->dma, DMA_FDT_INT, TRUE);
 
-    adc_enable(adc, TRUE);
+    adc_enable(adc, FALSE);
     adc_dma_mode_enable(adc, TRUE);
+    adc_enable(adc, TRUE);
     adc_ordinary_software_trigger_enable(adc, TRUE);
 }
 
@@ -279,13 +301,18 @@ static void adc_dma_irq_handle(adc_type *adc)
 	{
 		return;
 	}
+    
+    if (dma_get_flag(adc_drv->dma, DMA_FDT_FLAG) != RESET)
+    {
+        dma_clear_flag(adc_drv->dma, DMA_GL_FLAG);
 
-    if (adc_drv->func)
-	{
-		adc_drv->func();
-	}
+        if (adc_drv->func)
+        {
+            adc_drv->func();
+        }
 
-    adc_drv->sampling = false;
+        adc_drv->sampling = false;
+    }
 }
 
 #if ADC1_DMA_EN == 1

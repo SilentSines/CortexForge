@@ -12,6 +12,7 @@
 #include "encoder.h"
 #include "ir.h"
 #include "wm8978.h"
+#include "kt_tx.h"
 #include "kt_rx.h"
 
 #include "tft.h"

@@ -1,12 +1,12 @@
 #ifndef KT_RX_H
 #define KT_RX_H
 
-#define KT_NUM 2
+#define KT_RX_NUM 4
 
-#define KT_FREQ_MIN_HZ  640000  
-#define KT_FREQ_MAX_HZ  690000    
-#define KT_VOLUME_MIN   22   
-#define KT_VOLUME_MAX   31     
+#define KT_FREQ_MIN_HZ  640000   
+#define KT_FREQ_MAX_HZ  690000     
+#define KT_VOLUME_MIN   22  
+#define KT_VOLUME_MAX   31    
 
 void kt_rx_port_init(void);
 void kt_rx_init(uint32_t *freq);

@@ -1,8 +1,8 @@
 #include "hal.h"
 #include "i2c_cfg.h"
 
-#if SOFT_I2C_SIGNAL == 1
-static void soft_i2c_start(void)
+#if I2C_SW_FIXED == 1
+static void i2c_sw_start(void)
 {
 	I2C_SDA_H();
 	I2C_SCL_H();
@@ -13,7 +13,7 @@ static void soft_i2c_start(void)
 	delay_us(SOFT_I2C_DELAY);
 }
 
-static void soft_i2c_stop(void)
+static void i2c_sw_stop(void)
 {
 	I2C_SDA_L();
 	delay_us(SOFT_I2C_DELAY);
@@ -23,7 +23,7 @@ static void soft_i2c_stop(void)
 	delay_us(SOFT_I2C_DELAY);
 }
 
-static void soft_i2c_send_byte(uint8_t byte)
+static void i2c_sw_send_byte(uint8_t byte)
 {
 	uint8_t i;
 
@@ -46,7 +46,7 @@ static void soft_i2c_send_byte(uint8_t byte)
 	I2C_SDA_H();
 }
 
-static uint8_t soft_i2c_recv_byte(void)
+static uint8_t i2c_sw_recv_byte(void)
 {
 	uint8_t i;
 	uint8_t data = 0;
@@ -67,7 +67,7 @@ static uint8_t soft_i2c_recv_byte(void)
 	return data;
 }
 
-static bool soft_i2c_wait_ack(void)
+static bool i2c_sw_wait_ack(void)
 {
 	uint16_t retry = 0xFFFF;
 
@@ -87,7 +87,7 @@ static bool soft_i2c_wait_ack(void)
 	return true;
 }
 
-static void soft_i2c_ack(void)
+static void i2c_sw_ack(void)
 {
 	I2C_SCL_L();
 	I2C_SDA_L();	
@@ -99,7 +99,7 @@ static void soft_i2c_ack(void)
 	I2C_SDA_H();	
 }
 
-static void soft_i2c_nack(void)
+static void i2c_sw_nack(void)
 {
 	I2C_SCL_L();
 	I2C_SDA_H();	
@@ -110,107 +110,107 @@ static void soft_i2c_nack(void)
 	delay_us(SOFT_I2C_DELAY);
 }
 
-void soft_i2c_init(void)
+void i2c_sw_init(void)
 {
 	gpio_pin_init(SOFT_I2C_SCL_PIN, GPIO_OUT_OD, GPIO_AF_NONE);
 	gpio_pin_init(SOFT_I2C_SDA_PIN, GPIO_OUT_OD, GPIO_AF_NONE);
     
-    soft_i2c_stop();
+    i2c_sw_stop();
 }
 
-void soft_i2c_send(uint8_t slave_addr, uint16_t reg_addr, i2c_reg_addr_width_t reg_width, const uint8_t *buf, uint16_t size)
+void i2c_sw_send(uint8_t slave_addr, uint16_t reg_addr, i2c_reg_addr_width_t reg_width, const uint8_t *buf, uint16_t size)
 {
     uint16_t i;
 
-    soft_i2c_start();
-    soft_i2c_send_byte((slave_addr << 1) & 0xFE);
-    if (!soft_i2c_wait_ack())
+    i2c_sw_start();
+    i2c_sw_send_byte((slave_addr << 1) & 0xFE);
+    if (!i2c_sw_wait_ack())
 	{
 		goto stop;
 	}
 	if (reg_width == I2C_REG_ADDR_16BIT)
 	{
-		soft_i2c_send_byte((reg_addr >> 8) & 0xFF);
-		if (!soft_i2c_wait_ack())
+		i2c_sw_send_byte((reg_addr >> 8) & 0xFF);
+		if (!i2c_sw_wait_ack())
 		{
 			goto stop;
 		}
 	}
-    soft_i2c_send_byte(reg_addr & 0xFF);
-    if (!soft_i2c_wait_ack())
+    i2c_sw_send_byte(reg_addr & 0xFF);
+    if (!i2c_sw_wait_ack())
 	{
 		goto stop;
 	}
     for (i = 0; i < size; i++)
     {
-        soft_i2c_send_byte(buf[i]);
-        if (!soft_i2c_wait_ack())
+        i2c_sw_send_byte(buf[i]);
+        if (!i2c_sw_wait_ack())
 		{
 			goto stop;
 		}
     }
 stop:
-    soft_i2c_stop();
+    i2c_sw_stop();
 }
 
-void soft_i2c_recv(uint8_t slave_addr, uint16_t reg_addr, i2c_reg_addr_width_t reg_width, uint8_t *buf, uint16_t size)
+void i2c_sw_recv(uint8_t slave_addr, uint16_t reg_addr, i2c_reg_addr_width_t reg_width, uint8_t *buf, uint16_t size)
 {
     uint16_t i;
 
-    soft_i2c_start();
-    soft_i2c_send_byte((slave_addr << 1) & 0xFE);
-    if (!soft_i2c_wait_ack())
+    i2c_sw_start();
+    i2c_sw_send_byte((slave_addr << 1) & 0xFE);
+    if (!i2c_sw_wait_ack())
 	{
 		goto stop;
 	}
     if (reg_width == I2C_REG_ADDR_16BIT)
 	{
-		soft_i2c_send_byte((reg_addr >> 8) & 0xFF);
-		if (!soft_i2c_wait_ack())
+		i2c_sw_send_byte((reg_addr >> 8) & 0xFF);
+		if (!i2c_sw_wait_ack())
 		{
 			goto stop;
 		}
 	}
-    soft_i2c_send_byte(reg_addr & 0xFF);
-    if (!soft_i2c_wait_ack())
+    i2c_sw_send_byte(reg_addr & 0xFF);
+    if (!i2c_sw_wait_ack())
 	{
 		goto stop;
 	}
 
-    soft_i2c_start();
-    soft_i2c_send_byte((slave_addr << 1) | 0x01);
-    if (!soft_i2c_wait_ack())
+    i2c_sw_start();
+    i2c_sw_send_byte((slave_addr << 1) | 0x01);
+    if (!i2c_sw_wait_ack())
 	{
 		goto stop;
 	}
     for (i = 0; i < size; i++)
     {
-        buf[i] = soft_i2c_recv_byte(); 
+        buf[i] = i2c_sw_recv_byte(); 
         if(i == (size - 1))
         {
-            soft_i2c_nack();
+            i2c_sw_nack();
         }
         else
         {
-            soft_i2c_ack();
+            i2c_sw_ack();
         }
     }
 stop:
-    soft_i2c_stop();
+    i2c_sw_stop();
 }
 
-bool soft_i2c_check(uint8_t slave_addr)
+bool i2c_sw_check(uint8_t slave_addr)
 {
 	bool ack;
 
-	soft_i2c_start();
-    soft_i2c_send_byte((slave_addr << 1) & 0xFE);
-    ack =  soft_i2c_wait_ack();
-	soft_i2c_stop();
+	i2c_sw_start();
+    i2c_sw_send_byte((slave_addr << 1) & 0xFE);
+    ack =  i2c_sw_wait_ack();
+	i2c_sw_stop();
 	return ack;
 }
-#elif SOFT_I2C_MULTIPLE == 1
-static void soft_i2c_start(soft_i2c_t *i2c)
+#elif I2C_SW_INSTANCE == 1
+static void i2c_sw_start(i2c_sw_t *i2c)
 {
 	I2C_SDA_H(i2c);
 	I2C_SCL_H(i2c);
@@ -221,7 +221,7 @@ static void soft_i2c_start(soft_i2c_t *i2c)
 	delay_us(i2c->delay);
 }
 
-static void soft_i2c_stop(soft_i2c_t *i2c)
+static void i2c_sw_stop(i2c_sw_t *i2c)
 {
 	I2C_SDA_L(i2c);
 	delay_us(i2c->delay);
@@ -231,7 +231,7 @@ static void soft_i2c_stop(soft_i2c_t *i2c)
 	delay_us(i2c->delay);
 }
 
-static void soft_i2c_send_byte(soft_i2c_t *i2c, uint8_t byte)
+static void i2c_sw_send_byte(i2c_sw_t *i2c, uint8_t byte)
 {
 	uint8_t i;
 
@@ -254,7 +254,7 @@ static void soft_i2c_send_byte(soft_i2c_t *i2c, uint8_t byte)
 	I2C_SDA_H(i2c);
 }
 
-static uint8_t soft_i2c_recv_byte(soft_i2c_t *i2c)
+static uint8_t i2c_sw_recv_byte(i2c_sw_t *i2c)
 {
 	uint8_t i;
 	uint8_t data = 0;
@@ -275,7 +275,7 @@ static uint8_t soft_i2c_recv_byte(soft_i2c_t *i2c)
 	return data;
 }
 
-static bool soft_i2c_wait_ack(soft_i2c_t *i2c)
+static bool i2c_sw_wait_ack(i2c_sw_t *i2c)
 {
 	uint16_t retry = 0xFFFF;
 
@@ -295,7 +295,7 @@ static bool soft_i2c_wait_ack(soft_i2c_t *i2c)
 	return true;
 }
 
-static void soft_i2c_ack(soft_i2c_t *i2c)
+static void i2c_sw_ack(i2c_sw_t *i2c)
 {
 	I2C_SCL_L(i2c);
 	I2C_SDA_L(i2c);	
@@ -307,7 +307,7 @@ static void soft_i2c_ack(soft_i2c_t *i2c)
 	I2C_SDA_H(i2c);	
 }
 
-static void soft_i2c_nack(soft_i2c_t *i2c)
+static void i2c_sw_nack(i2c_sw_t *i2c)
 {
 	I2C_SCL_L(i2c);
 	I2C_SDA_H(i2c);	
@@ -318,103 +318,103 @@ static void soft_i2c_nack(soft_i2c_t *i2c)
 	delay_us(i2c->delay);
 }
 
-void soft_i2c_init(soft_i2c_t *i2c)
+void i2c_sw_init(i2c_sw_t *i2c)
 {
 	gpio_pin_init(i2c->scl_pin, GPIO_OUT_OD, GPIO_AF_NONE);
 	gpio_pin_init(i2c->sda_pin, GPIO_OUT_OD, GPIO_AF_NONE);
 
-	soft_i2c_stop(i2c);
+	i2c_sw_stop(i2c);
 }
 
-void soft_i2c_send(soft_i2c_t *i2c, uint8_t slave_addr, uint16_t reg_addr, i2c_reg_addr_width_t reg_width, const uint8_t *buf, uint16_t size)
+void i2c_sw_send(i2c_sw_t *i2c, uint8_t slave_addr, uint16_t reg_addr, i2c_reg_addr_width_t reg_width, const uint8_t *buf, uint16_t size)
 {
 	uint16_t i;
 
-    soft_i2c_start(i2c);
-    soft_i2c_send_byte(i2c, (slave_addr << 1) & 0xFE);
-    if (!soft_i2c_wait_ack(i2c))
+    i2c_sw_start(i2c);
+    i2c_sw_send_byte(i2c, (slave_addr << 1) & 0xFE);
+    if (!i2c_sw_wait_ack(i2c))
 	{
 		goto stop;
 	}
 	if (reg_width == I2C_REG_ADDR_16BIT)
 	{
-		soft_i2c_send_byte(i2c, (reg_addr >> 8) & 0xFF);
-		if (!soft_i2c_wait_ack(i2c))
+		i2c_sw_send_byte(i2c, (reg_addr >> 8) & 0xFF);
+		if (!i2c_sw_wait_ack(i2c))
 		{
 			goto stop;
 		}
 	}
-    soft_i2c_send_byte(i2c, reg_addr & 0xFF);
-    if (!soft_i2c_wait_ack(i2c))
+    i2c_sw_send_byte(i2c, reg_addr & 0xFF);
+    if (!i2c_sw_wait_ack(i2c))
 	{
 		goto stop;
 	}
     for (i = 0; i < size; i++)
     {
-        soft_i2c_send_byte(i2c, buf[i]);
-        if (!soft_i2c_wait_ack(i2c))
+        i2c_sw_send_byte(i2c, buf[i]);
+        if (!i2c_sw_wait_ack(i2c))
 		{
 			goto stop;
 		}
     }
 stop:
-    soft_i2c_stop(i2c);
+    i2c_sw_stop(i2c);
 }
 
-void soft_i2c_recv(soft_i2c_t *i2c, uint8_t slave_addr, uint16_t reg_addr, i2c_reg_addr_width_t reg_width, uint8_t *buf, uint16_t size)
+void i2c_sw_recv(i2c_sw_t *i2c, uint8_t slave_addr, uint16_t reg_addr, i2c_reg_addr_width_t reg_width, uint8_t *buf, uint16_t size)
 {
 	uint16_t i;
 
-    soft_i2c_start(i2c);
-    soft_i2c_send_byte(i2c, (slave_addr << 1) & 0xFE);
-    if (!soft_i2c_wait_ack(i2c))
+    i2c_sw_start(i2c);
+    i2c_sw_send_byte(i2c, (slave_addr << 1) & 0xFE);
+    if (!i2c_sw_wait_ack(i2c))
 	{
 		goto stop;
 	}
 	if (reg_width == I2C_REG_ADDR_16BIT)
 	{
-		soft_i2c_send_byte(i2c, (reg_addr >> 8) & 0xFF);
-		if (!soft_i2c_wait_ack(i2c))
+		i2c_sw_send_byte(i2c, (reg_addr >> 8) & 0xFF);
+		if (!i2c_sw_wait_ack(i2c))
 		{
 			goto stop;
 		}
 	}
-    soft_i2c_send_byte(i2c, reg_addr & 0xFF);
-    if (!soft_i2c_wait_ack(i2c))
+    i2c_sw_send_byte(i2c, reg_addr & 0xFF);
+    if (!i2c_sw_wait_ack(i2c))
 	{
 		goto stop;
 	}
 
-    soft_i2c_start(i2c);
-    soft_i2c_send_byte(i2c, (slave_addr << 1) | 0x01);
-    if (!soft_i2c_wait_ack(i2c))
+    i2c_sw_start(i2c);
+    i2c_sw_send_byte(i2c, (slave_addr << 1) | 0x01);
+    if (!i2c_sw_wait_ack(i2c))
 	{
 		goto stop;
 	}
     for (i = 0; i < size; i++)
     {
-        buf[i] = soft_i2c_recv_byte(i2c); 
+        buf[i] = i2c_sw_recv_byte(i2c); 
         if(i == (size - 1))
         {
-            soft_i2c_nack(i2c);
+            i2c_sw_nack(i2c);
         }
         else
         {
-            soft_i2c_ack(i2c);
+            i2c_sw_ack(i2c);
         }
     }
 stop:
-	soft_i2c_stop(i2c);
+	i2c_sw_stop(i2c);
 }
 
-bool soft_i2c_check(soft_i2c_t *i2c, uint8_t slave_addr)
+bool i2c_sw_check(i2c_sw_t *i2c, uint8_t slave_addr)
 {
 	bool ack;
 
-	soft_i2c_start(i2c);
-    soft_i2c_send_byte(i2c, (slave_addr << 1) & 0xFE);
-    ack =  soft_i2c_wait_ack(i2c);
-	soft_i2c_stop(i2c);
+	i2c_sw_start(i2c);
+    i2c_sw_send_byte(i2c, (slave_addr << 1) & 0xFE);
+    ack =  i2c_sw_wait_ack(i2c);
+	i2c_sw_stop(i2c);
 	return ack;
 }
 #endif
