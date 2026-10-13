@@ -61,7 +61,7 @@ const uint16_t gpio_pin_table[16] =
 
 static cb_t exti_cb[16];
 
-void gpio_pin_init(gpio_pin_t pin, gpio_mode_t mode, uint8_t af)
+void gpio_pin_init(gpio_pin_t pin, gpio_mode_t mode, uint32_t af)
 {
     gpio_init_type gpio_cfg = {0};
     gpio_type *gpio_port;

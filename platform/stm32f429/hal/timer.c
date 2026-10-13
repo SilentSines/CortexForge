@@ -58,6 +58,7 @@ void timer_init(timer_t timer, uint32_t time, uint32_t irqp, cb_t func)
     uint16_t period = 0;
     uint16_t prescaler = 0;
     TIM_HandleTypeDef htim = {0};
+    const timer_type_t *tmr_cfg;
 
     switch (timer)
     {
@@ -78,8 +79,10 @@ void timer_init(timer_t timer, uint32_t time, uint32_t irqp, cb_t func)
         default : return; break;
     }
 
+    tmr_cfg = &timer_table[timer];
+
     time_factorization(time, SystemCoreClock, &period, &prescaler);
-    htim.Instance = timer_table[timer].tim;
+    htim.Instance = tmr_cfg->tim;
     htim.Init.Prescaler = prescaler - 1;
     htim.Init.CounterMode = TIM_COUNTERMODE_UP;
     htim.Init.Period = period - 1;
@@ -91,8 +94,8 @@ void timer_init(timer_t timer, uint32_t time, uint32_t irqp, cb_t func)
         hal_error_handler();
     }
     __HAL_TIM_ENABLE_IT(&htim, TIM_IT_UPDATE);
-    HAL_NVIC_SetPriority(timer_table[timer].irq, irqp, 0);
-	HAL_NVIC_EnableIRQ(timer_table[timer].irq);
+    HAL_NVIC_SetPriority(tmr_cfg->irq, irqp, 0);
+	HAL_NVIC_EnableIRQ(tmr_cfg->irq);
     timer_cb[timer] = func; 
 }
 

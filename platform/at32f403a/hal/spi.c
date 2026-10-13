@@ -296,7 +296,7 @@ void spi_set_speed(spi_type *spi, spi_freq_div_t div)
 	spi->ctrl1_bit.spien = TRUE;
 }
 
-void spi_set_data_size(spi_type *spi, spi_data_size_t size)
+void spi_set_data_width(spi_type *spi, spi_data_width_t width)
 {
 	spi_drv_t *spi_drv = spi_select(spi);
 	if (spi_drv == NULL)
@@ -304,7 +304,7 @@ void spi_set_data_size(spi_type *spi, spi_data_size_t size)
 		return;
 	}
 
-	spi_frame_bit_num_type bit_num = (spi_frame_bit_num_type)(size);
+	spi_frame_bit_num_type bit_num = (spi_frame_bit_num_type)(width);
 	if (spi_drv->bit_num == bit_num)
 	{
 		return;

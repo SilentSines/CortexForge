@@ -15,131 +15,87 @@
 /****************UART1 CONFIG****************/
 #define UART1_TX_BUF_SIZE	1024
 #define UART1_RX_BUF_SIZE	1024
-/********UART1 TX PIN SEL********/
-#define UART1_TX_PORT   GPIOA
-#define UART1_TX_PIN    GPIO_PIN_9
 
-// #define UART1_TX_PORT   GPIOB
-// #define UART1_TX_PIN    GPIO_PIN_6
-/********UART1 RX PIN SEL********/
-#define UART1_RX_PORT   GPIOA
-#define UART1_RX_PIN    GPIO_PIN_10
+#define UART1_TX_PIN    GPIO_PA9
+// #define UART1_TX_PIN    GPIO_PB6
 
-// #define UART1_RX_PORT   GPIOB
-// #define UART1_RX_PIN    GPIO_PIN_7
+#define UART1_RX_PIN    GPIO_PA10
+// #define UART1_RX_PIN    GPIO_PB7
 /********************************/
 
 /****************UART2 CONFIG****************/
 #define UART2_TX_BUF_SIZE	1024
 #define UART2_RX_BUF_SIZE	1024
-/********UART2 TX PIN SEL********/
-#define UART2_TX_PORT   GPIOA
-#define UART2_TX_PIN    GPIO_PIN_2
 
-// #define UART2_TX_PORT   GPIOD
-// #define UART2_TX_PIN    GPIO_PIN_5
-/********UART2 RX PIN SEL********/
-#define UART2_RX_PORT   GPIOA
-#define UART2_RX_PIN    GPIO_PIN_3
+#define UART2_TX_PIN    GPIO_PA2
+// #define UART2_TX_PIN    GPIO_PD5
 
-// #define UART2_RX_PORT   GPIOD
-// #define UART2_RX_PIN    GPIO_PIN_6
+#define UART2_RX_PIN    GPIO_PA3
+// #define UART2_RX_PIN    GPIO_PD6
 /********************************/
 
 /****************UART3 CONFIG****************/
 #define UART3_TX_BUF_SIZE	1024
 #define UART3_RX_BUF_SIZE	1024
-/********UART3 TX PIN SEL********/
-#define UART3_TX_PORT   GPIOB
-#define UART3_TX_PIN    GPIO_PIN_10
 
-// #define UART3_TX_PORT   GPIOC
-// #define UART3_TX_PIN    GPIO_PIN_10
+#define UART3_TX_PIN    GPIO_PB10
+// #define UART3_TX_PIN    GPIO_PC10
+// #define UART3_TX_PIN    GPIO_PD8
 
-// #define UART3_TX_PORT   GPIOD
-// #define UART3_TX_PIN    GPIO_PIN_8
-/********UART3 RX PIN SEL********/
-#define UART3_RX_PORT   GPIOB
-#define UART3_RX_PIN    GPIO_PIN_11
-
-// #define UART3_RX_PORT   GPIOC
-// #define UART3_RX_PIN    GPIO_PIN_11
-
-// #define UART3_RX_PORT   GPIOD
-// #define UART3_RX_PIN    GPIO_PIN_9
+#define UART3_RX_PIN    GPIO_PB11
+// #define UART3_RX_PIN    GPIO_PC11
+// #define UART3_RX_PIN    GPIO_PD9
 /********************************/
 
 /***************UART4 CONFIG***************/
 #define UART4_TX_BUF_SIZE	1024
 #define UART4_RX_BUF_SIZE	1024
-/********UART4 TX PIN SEL********/
-#define UART4_TX_PORT   GPIOA
-#define UART4_TX_PIN    GPIO_PIN_0
 
-// #define UART4_TX_PORT   GPIOC
-// #define UART4_TX_PIN    GPIO_PIN_10
-/********UART4 RX PIN SEL********/
-#define UART4_RX_PORT   GPIOA
-#define UART4_RX_PIN    GPIO_PIN_1
+#define UART4_TX_PIN    GPIO_PA0
+// #define UART4_TX_PIN    GPIO_PC10
 
-// #define UART4_RX_PORT   GPIOC
-// #define UART4_RX_PIN    GPIO_PIN_11
+#define UART4_RX_PIN    GPIO_PA1
+// #define UART4_RX_PIN    GPIO_PC11
 /********************************/
 
 /****************UART5 CONFIG****************/
 #define UART5_TX_BUF_SIZE	1024
 #define UART5_RX_BUF_SIZE	1024
-/********UART5 TX PIN SEL********/
-#define UART5_TX_PORT   GPIOC
-#define UART5_TX_PIN    GPIO_PIN_12
-/********UART5 RX PIN SEL********/
-#define UART5_RX_PORT   GPIOD
-#define UART5_RX_PIN    GPIO_PIN_2
+
+#define UART5_TX_PIN    GPIO_PC12
+
+#define UART5_RX_PIN    GPIO_PD2
 /********************************/
 
 /****************UART6 CONFIG****************/
 #define UART6_TX_BUF_SIZE	1024
 #define UART6_RX_BUF_SIZE	1024
-/********UART6 TX PIN SEL********/
-#define UART6_TX_PORT   GPIOC
-#define UART6_TX_PIN    GPIO_PIN_6
 
-// #define UART6_TX_PORT   GPIOG
-// #define UART6_TX_PIN    GPIO_PIN_14
-/********UART6 RX PIN SEL********/
-#define UART6_RX_PORT   GPIOC
-#define UART6_RX_PIN    GPIO_PIN_7
+#define UART6_TX_PIN    GPIO_PC6
+// #define UART6_TX_PIN    GPIO_PG14
 
-// #define UART6_RX_PORT   GPIOG
-// #define UART6_RX_PIN    GPIO_PIN_9
+#define UART6_RX_PIN    GPIO_PC7
+// #define UART6_RX_PIN    GPIO_PG9
 /********************************/
 
 /****************UART7 CONFIG****************/
 #define UART7_TX_BUF_SIZE	1024
 #define UART7_RX_BUF_SIZE	1024
-/********UART7 TX PIN SEL********/
-#define UART7_TX_PORT   GPIOE
-#define UART7_TX_PIN    GPIO_PIN_8
 
-// #define UART7_TX_PORT   GPIOF
-// #define UART7_TX_PIN    GPIO_PIN_7
-/********UART7 RX PIN SEL********/
-#define UART7_RX_PORT   GPIOE
-#define UART7_RX_PIN    GPIO_PIN_7
+#define UART7_TX_PIN    GPIO_PE8
+// #define UART7_TX_PIN    GPIO_PF7
 
-// #define UART7_RX_PORT   GPIOF
-// #define UART7_RX_PIN    GPIO_PIN_6
+#define UART7_RX_PIN    GPIO_PE7
+// #define UART7_RX_PIN    GPIO_PF6
 /********************************/
 
 /****************UART8 CONFIG****************/
 #define UART8_TX_BUF_SIZE	1024
 #define UART8_RX_BUF_SIZE	1024
-/********UART8 TX PIN SEL********/
-#define UART8_TX_PORT   GPIOE
-#define UART8_TX_PIN    GPIO_PIN_1
-/********UART8 RX PIN SEL********/
-#define UART8_RX_PORT   GPIOE
-#define UART8_RX_PIN    GPIO_PIN_0
+
+#define UART8_TX_PIN    GPIO_PE1
+
+#define UART8_RX_PIN    GPIO_PE0
 /********************************/
 
 typedef struct

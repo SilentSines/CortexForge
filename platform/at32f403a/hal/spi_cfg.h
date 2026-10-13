@@ -6,7 +6,7 @@
 #define SPI3_EN 0 
 #define SPI4_EN 0 
 
-/********SPI1 CONFIG********/
+/********SPI1 PIN SEL********/
 #define SPI1_PIN_GROUP_1   1	//SCK(PA5) + MISO(PA6) + MOSI(PA7) + CS(PA4) 
 #define SPI1_PIN_GROUP_2   0 	//SCK(PB3) + MISO(PB4) + MOSI(PB5) + CS(PA15)
 #define SPI1_MISO_UNUSED   1
@@ -38,7 +38,7 @@
 
 
 
-/********SPI2 CONFIG********/
+/********SPI2 PIN SEL********/
 #define SPI2_PIN_GROUP_1   1	//SCK(PB13) + MISO(PB14) + MOSI(PB15) + CS(PB12) 
 #define SPI2_MISO_UNUSED   0
 /***************************/
@@ -69,7 +69,7 @@
 
 
 
-/********SPI3 CONFIG********/
+/********SPI3 PIN SEL********/
 #define SPI3_PIN_GROUP_1   1	//SCK(PB3) + MISO(PB4) + MOSI(PB5) + CS(PA15)
 #define SPI3_PIN_GROUP_2   0 	//SCK(PC10) + MISO(PC11) + MOSI(PC12) + CS(PA4)  
 #define SPI3_MISO_UNUSED   0
@@ -101,7 +101,7 @@
 
 
 
-/********SPI4 CONFIG********/
+/********SPI4 PIN SEL********/
 #define SPI4_PIN_GROUP_1   1	//SCK(PE2) + MISO(PE5) + MOSI(PE6) + CS(PE4)   
 #define SPI4_PIN_GROUP_2   0 	//SCK(PE11) + MISO(PE13) + MOSI(PE14) + CS(PE12) 
 #define SPI4_PIN_GROUP_3   0 	//SCK(PB7) + MISO(PB8) + MOSI(PB9) + CS(PB6)    

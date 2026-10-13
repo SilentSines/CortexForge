@@ -237,7 +237,7 @@ typedef enum
 extern gpio_type *gpio_port_table[];
 extern const uint16_t gpio_pin_table[16];
 
-void gpio_pin_init(gpio_pin_t pin, gpio_mode_t mode, uint8_t af);
+void gpio_pin_init(gpio_pin_t pin, gpio_mode_t mode, uint32_t af);
 void gpio_exti_init(gpio_pin_t pin, exti_edge_t edge, uint32_t irqp, cb_t func);
 
 #endif

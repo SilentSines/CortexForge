@@ -6,7 +6,7 @@
 #define I2S3_EN 1
 #define I2S4_EN 1
 
-/********I2S1 CONFIG********/
+/********I2S1 PIN SEL********/
 #define I2S1_PIN_GROUP_1   1	//WS(PA4) + CK(PA5) + SD(PA7) + MCK(PB0)
 #define I2S1_PIN_GROUP_2   0 	//WS(PA15) + CK(PB3) + SD(PB5) + MCK(PB0)
 #define I2S1_PIN_GROUP_3   0 	//WS(PA4) + CK(PA5) + SD(PA7) + MCK(PB6)
@@ -39,7 +39,7 @@
 
 
 
-/********I2S2 CONFIG********/
+/********I2S2 PIN SEL********/
 #define I2S2_PIN_GROUP_1   1	//MCK(PC6)
 #define I2S2_PIN_GROUP_2   0 	//MCK(PA3)
 #define I2S2_PIN_GROUP_3   0    //MCK(PA6)
@@ -71,7 +71,7 @@
 
 
 
-/********I2S3 CONFIG********/
+/********I2S3 PIN SEL********/
 #define I2S3_PIN_GROUP_1   0	//WS(PA15) + CK(PB3) + SDEXT(PB4) + SD(PB5) + MCK(PC7)
 #define I2S3_PIN_GROUP_2   0 	//WS(PA4) + CK(PC10) + SDEXT(PC11) + SD(PC12) + MCK(PC7)
 #define I2S3_PIN_GROUP_3   1 	//WS(PA15) + CK(PB3) + SDEXT(PB4) + SD(PB5) + MCK(PB10)
@@ -104,7 +104,7 @@
 
 
 
-/********I2S4 CONFIG********/
+/********I2S4 PIN SEL********/
 #define I2S4_PIN_GROUP_1   1	//WS(PE4) + CK(PE2) + SD(PE6) + MCK(PC8)
 #define I2S4_PIN_GROUP_2   0 	//WS(PE12) + CK(PE11) + SD(PE14) + MCK(PC8)
 #define I2S4_PIN_GROUP_3   0 	//WS(PB6) + CK(PB7) + SD(PB9) + MCK(PC8)
@@ -142,7 +142,6 @@ typedef struct
     bool mck_en;
     dma_channel_type *dma_tx;
     dma_channel_type *dma_rx;
-    bool dbuf_en;
     cb_arg_t func;
 } i2s_drv_t;
 

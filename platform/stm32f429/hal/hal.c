@@ -37,6 +37,13 @@ void system_clock_config(void)
     {
         hal_error_handler();
     }
+}
+
+void hal_init(void)
+{
+    __enable_irq();
+    HAL_Init();
+    system_clock_config();
 
     __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
@@ -50,13 +57,7 @@ void system_clock_config(void)
     __HAL_RCC_DMA1_CLK_ENABLE();
     __HAL_RCC_DMA2_CLK_ENABLE();
     __HAL_RCC_FMC_CLK_ENABLE();
-}
 
-void hal_init(void)
-{
-    __enable_irq();
-    HAL_Init();
-    system_clock_config();
     systick_init();
 }
 

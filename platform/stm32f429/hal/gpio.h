@@ -229,12 +229,12 @@ typedef enum
 #define GPIO_HIGH  1
 #define GPIO_LOW   0
 
-#define GPIO_OUT_H(pin)  ((GPIO_TypeDef *)gpio_port_table[(pin) >> 4])->BSRR = gpio_pin_table[(pin) & 0xF]
-#define GPIO_OUT_L(pin)  ((GPIO_TypeDef *)gpio_port_table[(pin) >> 4])->BSRR = (uint32_t)(gpio_pin_table[(pin) & 0xF]) << 16
-#define GPIO_TOGGLE(pin) ((GPIO_TypeDef *)gpio_port_table[(pin) >> 4])->ODR ^= gpio_pin_table[(pin) & 0xF]
+#define GPIO_OUT_H(pin)  (gpio_port_table[(pin) >> 4])->BSRR = gpio_pin_table[(pin) & 0xF]
+#define GPIO_OUT_L(pin)  (gpio_port_table[(pin) >> 4])->BSRR = (uint32_t)(gpio_pin_table[(pin) & 0xF]) << 16
+#define GPIO_TOGGLE(pin) (gpio_port_table[(pin) >> 4])->ODR ^= gpio_pin_table[(pin) & 0xF]
 #define GPIO_READ(pin)   ((gpio_port_table[(pin) >> 4]->IDR & gpio_pin_table[(pin) & 0xF]) != GPIO_LOW)
 
-extern const GPIO_TypeDef *gpio_port_table[];
+extern GPIO_TypeDef *gpio_port_table[];
 extern const uint16_t gpio_pin_table[16];
 
 void gpio_pin_init(gpio_pin_t pin, gpio_mode_t mode, uint32_t af);

@@ -1,6 +1,6 @@
 #include "bsp.h"
 
-const GPIO_TypeDef *gpio_port_table[] = 
+GPIO_TypeDef *gpio_port_table[] = 
 {
 #ifdef GPIOA
     GPIOA,
@@ -106,6 +106,7 @@ void gpio_pin_init(gpio_pin_t pin, gpio_mode_t mode, uint32_t af)
         case GPIO_OUT_PP_LOW :  gpio_cfg.Mode = GPIO_MODE_OUTPUT_PP;
                                 GPIO_OUT_L(pin);
                                 break;
+                                
         case GPIO_OUT_OD :      gpio_cfg.Mode = GPIO_MODE_OUTPUT_OD;
                                 break;
 

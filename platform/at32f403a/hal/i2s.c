@@ -370,7 +370,7 @@ void i2s_set_cfg(i2s_port_t i2s, i2s_sample_rate_t samplerate, i2s_format_t form
 	}
 }
 
-void i2s_set_tx_dma(i2s_port_t i2s, uint16_t *buf, uint32_t len, bool dbuf_en, cb_arg_t func)
+void i2s_set_tx_dma(i2s_port_t i2s, void *buf, uint32_t len, cb_arg_t func)
 {
 	i2s_drv_t *i2s_drv = i2s_select(i2s);
 
@@ -380,22 +380,14 @@ void i2s_set_tx_dma(i2s_port_t i2s, uint16_t *buf, uint32_t len, bool dbuf_en, c
 	}
 
 	i2s_drv->func = func;
-	i2s_drv->dbuf_en = dbuf_en;
 	dma_channel_enable(i2s_drv->dma_tx, FALSE);
 	i2s_drv->dma_tx->maddr = (uint32_t)buf;
 	i2s_drv->dma_tx->dtcnt = (i2s_drv->format <= I2S_DATA_16BIT_CHANNEL_32BIT) ? len : (len << 1);
-	if (dbuf_en)
-	{
-		dma_interrupt_enable(i2s_drv->dma_tx, DMA_FDT_INT | DMA_HDT_INT, TRUE);
-	}
-	else
-	{
-		dma_interrupt_enable(i2s_drv->dma_tx, DMA_HDT_INT, FALSE);
-		dma_interrupt_enable(i2s_drv->dma_tx, DMA_FDT_INT, TRUE);
-	}
+	dma_interrupt_enable(i2s_drv->dma_tx, DMA_HDT_INT, FALSE);
+	dma_interrupt_enable(i2s_drv->dma_tx, DMA_FDT_INT, TRUE);
 }
 
-void i2s_set_rx_dma(i2s_port_t i2s, uint16_t *buf, uint32_t len, bool dbuf_en, cb_arg_t func)
+void i2s_set_rx_dma(i2s_port_t i2s, void *buf, uint32_t len, cb_arg_t func)
 {
 	i2s_drv_t *i2s_drv = i2s_select(i2s);
 
@@ -405,19 +397,11 @@ void i2s_set_rx_dma(i2s_port_t i2s, uint16_t *buf, uint32_t len, bool dbuf_en, c
 	}
 
 	i2s_drv->func = func;
-	i2s_drv->dbuf_en = dbuf_en;
 	dma_channel_enable(i2s_drv->dma_rx, FALSE);
 	i2s_drv->dma_rx->maddr = (uint32_t)buf;
 	i2s_drv->dma_rx->dtcnt = (i2s_drv->format <= I2S_DATA_16BIT_CHANNEL_32BIT) ? len : (len << 1);
-	if (dbuf_en)
-	{
-		dma_interrupt_enable(i2s_drv->dma_rx, DMA_FDT_INT | DMA_HDT_INT, TRUE);
-	}
-	else
-	{
-		dma_interrupt_enable(i2s_drv->dma_rx, DMA_HDT_INT, FALSE);
-		dma_interrupt_enable(i2s_drv->dma_rx, DMA_FDT_INT, TRUE);
-	}
+	dma_interrupt_enable(i2s_drv->dma_rx, DMA_HDT_INT, FALSE);
+	dma_interrupt_enable(i2s_drv->dma_rx, DMA_FDT_INT, TRUE);
 }
 
 void i2s_tx_start(i2s_port_t i2s)
@@ -528,7 +512,6 @@ static void i2s_dma_irq_handle(i2s_port_t i2s, bool is_tx)
 {
 	dma_channel_type *ch;
 	cb_arg_t func;
-	bool dbuf;
 	i2s_drv_t *i2s_drv = i2s_select(i2s);
 
 	if (i2s_drv == NULL)
@@ -538,14 +521,13 @@ static void i2s_dma_irq_handle(i2s_port_t i2s, bool is_tx)
 
 	ch = (is_tx) ? i2s_drv->dma_tx : i2s_drv->dma_rx;
 	func = i2s_drv->func;
-	dbuf = i2s_drv->dbuf_en;
 
-	if ((dbuf) && (dma_get_flag(ch, DMA_HDT_FLAG) != RESET))
+	if ((dma_get_flag(ch, DMA_HDT_FLAG) != RESET))
 	{
 		dma_clear_flag(ch, DMA_HDT_FLAG);
 		if (func)
 		{
-			func((void *)DMA_HDT_FLAG);
+			func((void *)I2S_DMA_BUF_FIRST);
 		}
 	}
 
@@ -554,7 +536,7 @@ static void i2s_dma_irq_handle(i2s_port_t i2s, bool is_tx)
 		dma_clear_flag(ch, DMA_GL_FLAG);
 		if (func)
 		{
-			func((void *)DMA_FDT_FLAG);
+			func((void *)I2S_DMA_BUF_SECOND);
 		}
 	}
 }

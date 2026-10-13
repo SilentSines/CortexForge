@@ -3,9 +3,9 @@
 
 typedef enum
 {
-    SPI_DATA_SIZE_8BIT  = 0x00,
-    SPI_DATA_SIZE_16BIT = 0x01,
-} spi_data_size_t;
+    SPI_DATA_WIDTH_8BIT  = 0x00,
+    SPI_DATA_WIDTH_16BIT = 0x01,
+} spi_data_width_t;
 
 typedef enum
 {
@@ -23,7 +23,7 @@ typedef enum
 
 void spi_bus_init(spi_type *spi, uint8_t mode);
 void spi_set_speed(spi_type *spi, spi_freq_div_t div);
-void spi_set_data_size(spi_type *spi, spi_data_size_t size);
+void spi_set_data_width(spi_type *spi, spi_data_width_t width);
 void spi_send_poll(spi_type *spi, const void *buf, uint32_t size);
 void spi_recv_poll(spi_type *spi, void *buf, uint32_t size);
 void spi_send_dma(spi_type *spi, const void *buf, uint32_t size, cb_t func);

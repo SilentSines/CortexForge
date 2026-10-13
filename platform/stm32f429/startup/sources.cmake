@@ -1,8 +1,8 @@
 # Startup sources
 # C files shared between ARM and GCC
 set(STARTUP_SOURCE
-    ${CMAKE_CURRENT_LIST_DIR}/system_stm32f4xx.c
     ${CMAKE_CURRENT_LIST_DIR}/stm32f4xx_it.c
+    ${CMAKE_CURRENT_LIST_DIR}/system_stm32f4xx.c
 )
 
 # Compiler-specific startup assembly

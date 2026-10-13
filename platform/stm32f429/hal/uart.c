@@ -51,65 +51,41 @@ static uint8_t rx_buf8[UART8_RX_BUF_SIZE];
 
 static uart_t* uart_select(com_port_t port)
 {
-	uart_t *com;
+		uart_t *com = NULL;
 
 	switch (port)
 	{
-		case COM1 :	
-					#if UART1_EN == 0
-						com = NULL; break;
-					#else
-						com = &uart1; break;
-					#endif
-	
-		case COM2 :	
-					#if UART2_EN == 0
-						com = NULL; break;
-					#else
-						com = &uart2; break;
-					#endif		
+	#if UART1_EN == 1
+        case COM1 : com = &uart1; break;
+    #endif
 
-		case COM3 :	
-					#if UART3_EN == 0
-						com = NULL; break;
-					#else
-						com = &uart3; break;
-					#endif
-	
-		case COM4 :	
-					#if UART4_EN == 0
-						com = NULL; break;
-					#else
-						com = &uart4; break;
-					#endif	
-					
-		case COM5 :	
-					#if UART5_EN == 0
-						com = NULL; break;
-					#else
-						com = &uart5; break;
-					#endif	
+    #if UART2_EN == 1
+        case COM2 : com = &uart2; break;
+    #endif
 
-		case COM6 :	
-					#if UART6_EN == 0
-						com = NULL; break;
-					#else
-						com = &uart6; break;
-					#endif
-					
-		case COM7 :	
-					#if UART7_EN == 0
-						com = NULL; break;
-					#else
-						com = &uart7; break;
-					#endif	
+    #if UART3_EN == 1
+        case COM3 : com = &uart3; break;
+    #endif
 
-		case COM8 :	
-					#if UART8_EN == 0
-						com = NULL; break;
-					#else
-						com = &uart8; break;
-					#endif	
+	#if UART4_EN == 1
+        case COM4 : com = &uart4; break;
+    #endif
+
+	#if UART5_EN == 1
+        case COM5 : com = &uart5; break;
+    #endif
+
+	#if UART6_EN == 1
+        case COM6 : com = &uart6; break;
+    #endif
+
+	#if UART7_EN == 1
+        case COM7 : com = &uart7; break;
+    #endif
+
+	#if UART8_EN == 1
+        case COM8 : com = &uart8; break;
+    #endif
 		
 		default : 	com = NULL; break;
 	}
@@ -119,10 +95,8 @@ static uart_t* uart_select(com_port_t port)
 void uart_init(com_port_t port, uint32_t baud, uint32_t irqp)
 {
 	IRQn_Type irq;
-	GPIO_TypeDef *tx_port, *rx_port;
 	uint32_t tx_pin, rx_pin;
 	uint32_t tx_af, rx_af;
-	GPIO_InitTypeDef gpio_init = {0};
 	UART_HandleTypeDef huart = {0};	
 	uart_t *com = uart_select(port);
 
@@ -134,10 +108,8 @@ void uart_init(com_port_t port, uint32_t baud, uint32_t irqp)
 	{
 		case COM1 :	__HAL_RCC_USART1_CLK_ENABLE();
 					irq = USART1_IRQn;
-					tx_port = UART1_TX_PORT;
 					tx_pin = UART1_TX_PIN;
 					tx_af = GPIO_AF7_USART1;
-					rx_port = UART1_RX_PORT;
 					rx_pin = UART1_RX_PIN;
 					rx_af = GPIO_AF7_USART1;
 				#if UART1_EN == 1
@@ -148,10 +120,8 @@ void uart_init(com_port_t port, uint32_t baud, uint32_t irqp)
 	
 		case COM2 :	__HAL_RCC_USART2_CLK_ENABLE();
 					irq = USART2_IRQn;
-					tx_port = UART2_TX_PORT;
 					tx_pin = UART2_TX_PIN;
 					tx_af = GPIO_AF7_USART2;
-					rx_port = UART2_RX_PORT;
 					rx_pin = UART2_RX_PIN;
 					rx_af = GPIO_AF7_USART2;
 				#if UART2_EN == 1
@@ -162,10 +132,8 @@ void uart_init(com_port_t port, uint32_t baud, uint32_t irqp)
 
 		case COM3 :	__HAL_RCC_USART3_CLK_ENABLE();
 					irq = USART3_IRQn;
-					tx_port = UART3_TX_PORT;
 					tx_pin = UART3_TX_PIN;
 					tx_af = GPIO_AF7_USART3;
-					rx_port = UART3_RX_PORT;
 					rx_pin = UART3_RX_PIN;
 					rx_af = GPIO_AF7_USART3;
 				#if UART3_EN == 1
@@ -176,10 +144,8 @@ void uart_init(com_port_t port, uint32_t baud, uint32_t irqp)
 	
 		case COM4 :	__HAL_RCC_UART4_CLK_ENABLE();
 					irq = UART4_IRQn;
-					tx_port = UART4_TX_PORT;
 					tx_pin = UART4_TX_PIN;
 					tx_af = GPIO_AF8_UART4;
-					rx_port = UART4_RX_PORT;
 					rx_pin = UART4_RX_PIN;
 					rx_af = GPIO_AF8_UART4;
 				#if UART4_EN == 1
@@ -190,10 +156,8 @@ void uart_init(com_port_t port, uint32_t baud, uint32_t irqp)
 
 		case COM5 :	__HAL_RCC_UART5_CLK_ENABLE();
 					irq = UART5_IRQn;
-					tx_port = UART5_TX_PORT;
 					tx_pin = UART5_TX_PIN;
 					tx_af = GPIO_AF8_UART5;
-					rx_port = UART5_RX_PORT;
 					rx_pin = UART5_RX_PIN;
 					rx_af = GPIO_AF8_UART5;
 				#if UART5_EN == 1
@@ -204,10 +168,8 @@ void uart_init(com_port_t port, uint32_t baud, uint32_t irqp)
 
 		case COM6 :	__HAL_RCC_USART6_CLK_ENABLE();
 					irq = USART6_IRQn;
-					tx_port = UART6_TX_PORT;
 					tx_pin = UART6_TX_PIN;
 					tx_af = GPIO_AF8_USART6;
-					rx_port = UART6_RX_PORT;
 					rx_pin = UART6_RX_PIN;
 					rx_af = GPIO_AF8_USART6;
 				#if UART6_EN == 1
@@ -218,10 +180,8 @@ void uart_init(com_port_t port, uint32_t baud, uint32_t irqp)
 
 		case COM7 :	__HAL_RCC_UART7_CLK_ENABLE();
 					irq = UART7_IRQn;
-					tx_port = UART7_TX_PORT;
 					tx_pin = UART7_TX_PIN;
 					tx_af = GPIO_AF8_UART7;
-					rx_port = UART7_RX_PORT;
 					rx_pin = UART7_RX_PIN;
 					rx_af = GPIO_AF8_UART7;
 				#if UART7_EN == 1
@@ -232,10 +192,8 @@ void uart_init(com_port_t port, uint32_t baud, uint32_t irqp)
 
 		case COM8 :	__HAL_RCC_UART8_CLK_ENABLE();
 					irq = UART8_IRQn;
-					tx_port = UART8_TX_PORT;
 					tx_pin = UART8_TX_PIN;
 					tx_af = GPIO_AF8_UART8;
-					rx_port = UART8_RX_PORT;
 					rx_pin = UART8_RX_PIN;
 					rx_af = GPIO_AF8_UART8;
 				#if UART8_EN == 1
@@ -247,14 +205,8 @@ void uart_init(com_port_t port, uint32_t baud, uint32_t irqp)
 		default : return;
 	}
 	
-	gpio_init.Mode = GPIO_MODE_AF_PP;
-	gpio_init.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-	gpio_init.Alternate = tx_af;
-	gpio_init.Pin = tx_pin;
-	HAL_GPIO_Init(tx_port, &gpio_init);
-	gpio_init.Alternate = rx_af;
-	gpio_init.Pin = rx_pin;
-	HAL_GPIO_Init(rx_port, &gpio_init);
+	gpio_pin_init(tx_pin, GPIO_AF_PP, tx_af);
+	gpio_pin_init(rx_pin, GPIO_AF_PP, rx_af);
 
 	huart.Instance = com->uart;
 	huart.Init.BaudRate = baud;
@@ -320,9 +272,39 @@ void uart_send_byte(com_port_t port, uint8_t data)
 	uart_send_buf(port, &data, 1);
 }
 
+uint32_t uart_recv(com_port_t port, uint8_t *buf, uint32_t size)
+{
+    uint32_t i, count, recv_len;
+	uart_t *com = uart_select(port);
+
+	if(com == NULL)
+	{
+		return 0;
+	}
+    CRITICAL_SECTION(count = com->rx_count);
+    recv_len = (count < size) ? count : size;
+    for (i = 0; i < recv_len; i++) 
+    {
+        buf[i] = com->rx_ring_buf[com->rx_read];
+        CRITICAL_SECTION(
+        if (++com->rx_read >= com->rx_buf_size) 
+        {
+            com->rx_read = 0;
+        }
+        com->rx_count--);
+    }
+    return recv_len;
+}
+
 bool uart_recv_byte(com_port_t port, uint8_t *data)
 {
-	uint32_t count;
+	uint32_t len = uart_recv(port, data, 1);
+	return (len == 1) ? true : false;
+}
+
+bool uart_peek_rx(com_port_t port, uint8_t *buf, uint32_t size)
+{
+	uint32_t i, read, count;
 	uart_t *com = uart_select(port);
 
 	if(com == NULL)
@@ -330,24 +312,51 @@ bool uart_recv_byte(com_port_t port, uint8_t *data)
 		return false;
 	}
 	CRITICAL_SECTION(count = com->rx_count);
-	if (count == 0) 
+	if (count < size) 
 	{
 		return false;
 	}
-	else
+
+	read = com->rx_read;
+	for (i = 0; i < size; i++)
 	{
-		*data = com->rx_ring_buf[com->rx_read]; 
-		CRITICAL_SECTION(
-		if (++com->rx_read >= com->rx_buf_size)
+		buf[i] = com->rx_ring_buf[read];
+		if (++read >= com->rx_buf_size)
 		{
-			com->rx_read = 0;
+			read = 0;
 		}
-		com->rx_count--);
-		return true;
 	}
+	return true;
 }
 
-void uart_clr_tx_fifo(com_port_t port)
+void uart_discard_rx(com_port_t port, uint32_t size)
+{
+	uint32_t count;
+	uart_t *com = uart_select(port);
+
+	if(com == NULL)
+	{
+		return;
+	}
+	CRITICAL_SECTION(count = com->rx_count);
+	if (count == 0) 
+	{
+		return;
+	}
+	if (count > size)
+	{
+		count = size;
+	}
+	CRITICAL_SECTION(
+	com->rx_read += count;
+	if (com->rx_read >= com->rx_buf_size)
+	{
+		com->rx_read -= com->rx_buf_size;
+	}
+	com->rx_count -= count);
+}
+
+void uart_clr_tx(com_port_t port)
 {
 	uart_t *com = uart_select(port);
 
@@ -355,12 +364,13 @@ void uart_clr_tx_fifo(com_port_t port)
 	{
 		return;
 	}
+	CRITICAL_SECTION(
 	com->tx_write = 0;
 	com->tx_read = 0;
-	com->tx_count = 0;
+	com->tx_count = 0);
 }
 
-void uart_clr_rx_fifo(com_port_t port)
+void uart_clr_rx(com_port_t port)
 {
 	uart_t *com = uart_select(port);
 
@@ -368,9 +378,10 @@ void uart_clr_rx_fifo(com_port_t port)
 	{
 		return;
 	}
+	CRITICAL_SECTION(
 	com->rx_write = 0;
 	com->rx_read = 0;
-	com->rx_count = 0;
+	com->rx_count = 0);
 }
 
 bool uart_tx_empty(com_port_t port)
@@ -382,6 +393,20 @@ bool uart_tx_empty(com_port_t port)
 		return false;
 	}
 	return com->busy;
+}
+
+bool uart_rx_available(com_port_t port)
+{
+	uint32_t count;
+	uart_t *com = uart_select(port);
+
+	if(com == NULL)
+	{
+		return false;
+	}
+
+	CRITICAL_SECTION(count = com->rx_count);
+	return (count > 0) ? true : false;
 }
 
 static void uart_irq(uart_t *com)
@@ -413,6 +438,7 @@ static void uart_irq(uart_t *com)
 		}
 		else
 		{
+			CLEAR_BIT(com->uart->CR1, USART_CR1_TCIE);
 			com->busy = 1;
 			com->uart->DR = com->tx_ring_buf[com->tx_read];
 			if (++com->tx_read >= com->tx_buf_size)
@@ -432,12 +458,7 @@ static void uart_irq(uart_t *com)
 		}
 		else
 		{
-			com->uart->DR = com->tx_ring_buf[com->tx_read];
-			if (++com->tx_read >= com->tx_buf_size)
-			{
-				com->tx_read = 0;
-			}
-			com->tx_count--;
+			SET_BIT(com->uart->CR1, USART_CR1_TXEIE);
 		}
 	}
 }
@@ -499,22 +520,41 @@ void UART8_RQHandler(void)
 #endif
 
 #ifdef STDIO_COM
+#ifdef ARM
 int fputc(int ch, FILE *f)
 {
-    UNUSED(f);
-    uart_send_byte(STDIO_COM, (uint8_t)ch);
-    return ch;
+	UNUSED(f);
+	uart_send_byte(STDIO_COM, ch);
+	return ch;
 }
 
 int fgetc(FILE *f)
 {
-    uint8_t data;
-	
-    UNUSED(f); 
-    if (uart_recv_byte(STDIO_COM, &data) == false)
-    {
-        data = 0xFF;
-    }
-    return data;
+	uint8_t data;
+
+	UNUSED(f);
+	while (uart_recv_byte(STDIO_COM, &data) == false);
+	return data;
 }
+#elif defined(GCC)
+int _write( int file, char *ptr, int len)
+{
+    UNUSED(file); 
+    uart_send(STDIO_COM, ptr, len);
+	return len;
+}
+
+int _read(int file, char *ptr, int len)
+{
+    UNUSED(file); 
+	int total = len;
+	while (total > 0)
+	{
+		int recv_len = uart_recv(STDIO_COM, ptr, total);
+		total -= recv_len;
+		ptr += recv_len;
+	}
+	return len;
+}
+#endif
 #endif

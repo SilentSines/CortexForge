@@ -17,8 +17,7 @@ typedef enum
     I2S_SLAVE_FULL_DUPLEX,
     I2S_SLAVE_HALF_TX,    
     I2S_SLAVE_HALF_RX
-} 
-i2s_mode_t;
+} i2s_mode_t;
 
 typedef uint32_t i2s_sample_rate_t;
 
@@ -40,10 +39,16 @@ typedef enum
     I2S_FMT_DATA32_CH32,
 } i2s_format_t;
 
+typedef enum
+{
+    I2S_DMA_BUF_FIRST,   
+    I2S_DMA_BUF_SECOND,
+} i2s_dma_buf_t;
+
 void i2s_bus_init(i2s_port_t i2s, i2s_mode_t mode, bool mck_en);
 void i2s_set_cfg(i2s_port_t i2s, i2s_sample_rate_t samplerate, i2s_format_t format);
-void i2s_set_tx_dma(i2s_port_t i2s, uint16_t *buf, uint32_t len, bool dbuf_en, cb_arg_t func);
-void i2s_set_rx_dma(i2s_port_t i2s, uint16_t *buf, uint32_t len, bool dbuf_en, cb_arg_t func);
+void i2s_set_tx_dma(i2s_port_t i2s, void *buf, uint32_t len, cb_arg_t func);
+void i2s_set_rx_dma(i2s_port_t i2s, void *buf, uint32_t len, cb_arg_t func);
 void i2s_tx_start(i2s_port_t i2s);
 void i2s_tx_stop(i2s_port_t i2s);
 void i2s_rx_start(i2s_port_t i2s);

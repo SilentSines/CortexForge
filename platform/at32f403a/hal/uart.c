@@ -356,7 +356,6 @@ bool uart_peek_rx(com_port_t port, uint8_t *buf, uint32_t size)
 		}
 	}
 	return true;
-	
 }
 
 void uart_discard_rx(com_port_t port, uint32_t size)
