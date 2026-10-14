@@ -7,7 +7,7 @@ typedef enum
     I2C_REG_ADDR_16BIT, 
 } i2c_reg_addr_width_t;
 
-#define	I2C_SW_FIXED	    0
+#define	I2C_SW_FIXED	  0
 #define	I2C_SW_INSTANCE   1
 
 #if I2C_SW_FIXED == 1

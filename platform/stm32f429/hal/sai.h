@@ -3,9 +3,9 @@
 
 typedef enum
 {
-    SAIA,
-    SAIB,
-} sai_port_t;
+    SAI_UNIT_A,
+    SAI_UNIT_B,
+} sai_unit_t;
 
 typedef enum 
 {
@@ -43,10 +43,10 @@ typedef enum
     SAI_DMA_BUF_SECOND,
 } sai_dma_buf_t;
 
-void sai_bus_init(sai_port_t sai, sai_mode_t mode);
-void sai_set_cfg(sai_port_t sai, sai_sample_rate_t samplerate, sai_data_width_t width);
-void sai_set_dma(sai_port_t sai, void *buf0, void *buf1, uint32_t len, cb_arg_t func);
-void sai_start(sai_port_t sai);
-void sai_stop(sai_port_t sai);
+void sai_bus_init(sai_unit_t sai, sai_mode_t mode);
+void sai_set_cfg(sai_unit_t sai, sai_sample_rate_t samplerate, sai_data_width_t width);
+void sai_set_dma(sai_unit_t sai, void *buf0, void *buf1, uint32_t len, cb_arg_t func);
+void sai_start(sai_unit_t sai);
+void sai_stop(sai_unit_t sai);
 
 #endif

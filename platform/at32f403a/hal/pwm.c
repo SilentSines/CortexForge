@@ -7,9 +7,9 @@ typedef struct
     tmr_type *tmr;
     uint32_t channel;
     bool invert;
-} pwm_type_t;
+} pwm_map_t;
 
-static const pwm_type_t pwm_table[] =
+static const pwm_map_t pwm_map_table[] =
 {
     /****************Positive****************/
     {GPIO_PA8, 0,              TMR1, TMR_SELECT_CHANNEL_1, false},
@@ -107,7 +107,6 @@ void pwm_init(pwm_pin_t pin, uint32_t res, uint32_t freq, pwm_polarity_t polarit
     uint32_t arr, psc;
     gpio_init_type gpio_cfg = {0};
     tmr_output_config_type oc_config = {0};
-    const pwm_type_t *pwm = &pwm_table[pin];
 
     if (res == 0 || freq == 0 || (res * freq) > SystemCoreClock)
     {
@@ -166,31 +165,33 @@ void pwm_init(pwm_pin_t pin, uint32_t res, uint32_t freq, pwm_polarity_t polarit
     {
         return;
     }
+
+    const pwm_map_t *map = &pwm_map_table[pin];
     
-    gpio_pin_init(pwm->pin, GPIO_AF_PP, GPIO_AF_TMR);
-    if (pwm->remap)
+    gpio_pin_init(map->pin, GPIO_AF_PP, GPIO_AF_TMR);
+    if (map->remap)
     {
-        gpio_pin_remap_config(pwm->remap, TRUE);
+        gpio_pin_remap_config(map->remap, TRUE);
     }
 
     arr = res;
     psc = SystemCoreClock / res / freq;
-    tmr_base_init(pwm->tmr, arr - 1, psc - 1);
-    tmr_period_buffer_enable(pwm->tmr, FALSE);
-    tmr_cnt_dir_set(pwm->tmr, TMR_COUNT_UP);
-    tmr_clock_source_div_set(pwm->tmr, TMR_CLOCK_DIV1);
+    tmr_base_init(map->tmr, arr - 1, psc - 1);
+    tmr_period_buffer_enable(map->tmr, FALSE);
+    tmr_cnt_dir_set(map->tmr, TMR_COUNT_UP);
+    tmr_clock_source_div_set(map->tmr, TMR_CLOCK_DIV1);
     if (pin <= TMR8_PWM_CH3N_PB1)
     {
-        tmr_primary_mode_select(pwm->tmr, TMR_PRIMARY_SEL_RESET);
+        tmr_primary_mode_select(map->tmr, TMR_PRIMARY_SEL_RESET);
     }
-    if (pin <= TMR9_PWM_CH2_PE6 || (pwm->tmr == TMR12))
+    if (pin <= TMR9_PWM_CH2_PE6 || (map->tmr == TMR12))
     {
-        tmr_sub_sync_mode_set(pwm->tmr, FALSE);
+        tmr_sub_sync_mode_set(map->tmr, FALSE);
     }
-    if (pwm->tmr == TMR1 || pwm->tmr == TMR8)
+    if (map->tmr == TMR1 || map->tmr == TMR8)
     {
-        tmr_repetition_counter_set(pwm->tmr, 0);
-        tmr_output_enable(pwm->tmr, TRUE);
+        tmr_repetition_counter_set(map->tmr, 0);
+        tmr_output_enable(map->tmr, TRUE);
     }
 
     oc_config.oc_mode = TMR_OUTPUT_CONTROL_PWM_MODE_A;
@@ -206,7 +207,7 @@ void pwm_init(pwm_pin_t pin, uint32_t res, uint32_t freq, pwm_polarity_t polarit
     }
     oc_config.oc_idle_state = FALSE;
     oc_config.occ_idle_state = FALSE;
-    if (pwm->invert)
+    if (map->invert)
     {
         oc_config.oc_output_state = FALSE;
         oc_config.occ_output_state = TRUE;
@@ -216,11 +217,11 @@ void pwm_init(pwm_pin_t pin, uint32_t res, uint32_t freq, pwm_polarity_t polarit
         oc_config.oc_output_state = TRUE;
         oc_config.occ_output_state = FALSE;
     }
-    tmr_output_channel_config(pwm->tmr, pwm->channel, &oc_config);
-    tmr_channel_value_set(pwm->tmr, pwm->channel, 0);
-    tmr_output_channel_buffer_enable(pwm->tmr, pwm->channel, FALSE);
-    tmr_output_channel_immediately_set(pwm->tmr, pwm->channel, FALSE);
-    tmr_channel_enable(pwm->tmr, pwm->channel + pwm->invert, FALSE);
+    tmr_output_channel_config(map->tmr, map->channel, &oc_config);
+    tmr_channel_value_set(map->tmr, map->channel, 0);
+    tmr_output_channel_buffer_enable(map->tmr, map->channel, FALSE);
+    tmr_output_channel_immediately_set(map->tmr, map->channel, FALSE);
+    tmr_channel_enable(map->tmr, map->channel + map->invert, FALSE);
 }
 
 void pwm_set_freq(pwm_pin_t pin, uint32_t freq)
@@ -233,7 +234,7 @@ void pwm_set_freq(pwm_pin_t pin, uint32_t freq)
         return;
     }
 
-    tmr = pwm_table[pin].tmr;
+    tmr = pwm_map_table[pin].tmr;
     arr = tmr_period_value_get(tmr) + 1;
     if (arr == 0 || freq == 0 || (arr * freq) > SystemCoreClock)
     {
@@ -246,21 +247,19 @@ void pwm_set_freq(pwm_pin_t pin, uint32_t freq)
 void pwm_set_duty(pwm_pin_t pin, uint32_t duty)
 {
     uint32_t arr;
-    const pwm_type_t *pwm;
 
     if (pin >= PWM_PIN_MAX)
     {
         return;
     }
     
-    pwm = &pwm_table[pin];
-    arr = tmr_period_value_get(pwm->tmr);
-    tmr_channel_value_set(pwm->tmr, pwm->channel, (duty > arr) ? arr : duty);
+    const pwm_map_t *map = &pwm_map_table[pin];
+    arr = tmr_period_value_get(map->tmr);
+    tmr_channel_value_set(map->tmr, map->channel, (duty > arr) ? arr : duty);
 }
 
 void pwm_start(pwm_pin_t pin)
 {
-    const pwm_type_t *pwm;
     tmr_type *tmr;
     tmr_channel_select_type tmr_channel;
 
@@ -269,18 +268,17 @@ void pwm_start(pwm_pin_t pin)
         return;
     }
 
-    pwm = &pwm_table[pin];
-    tmr = pwm->tmr;
+    const pwm_map_t *map = &pwm_map_table[pin];
+    tmr = map->tmr;
 
-    tmr_channel = (tmr_channel_select_type)(pwm->channel + pwm->invert);
+    tmr_channel = (tmr_channel_select_type)(map->channel + map->invert);
     tmr_channel_enable(tmr, tmr_channel, TRUE);
 
-    tmr_counter_enable(pwm->tmr, TRUE);
+    tmr_counter_enable(map->tmr, TRUE);
 }
 
 void pwm_stop(pwm_pin_t pin)
 {
-    const pwm_type_t *pwm;
     tmr_type *tmr;
     tmr_channel_select_type tmr_channel;
 
@@ -289,14 +287,14 @@ void pwm_stop(pwm_pin_t pin)
         return;
     }
 
-    pwm = &pwm_table[pin];
-    tmr = pwm->tmr;
+    const pwm_map_t *map = &pwm_map_table[pin];
+    tmr = map->tmr;
 
-    tmr_channel = (tmr_channel_select_type)(pwm->channel + pwm->invert);
+    tmr_channel = (tmr_channel_select_type)(map->channel + map->invert);
     tmr_channel_enable(tmr, tmr_channel, FALSE);
 
     if ((tmr->cctrl & 0x1555) == 0)
     {
-       tmr_counter_enable(pwm->tmr, FALSE);
+       tmr_counter_enable(map->tmr, FALSE);
     }
 }  

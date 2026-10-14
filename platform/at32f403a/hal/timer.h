@@ -3,24 +3,24 @@
 
 typedef enum
 {
-    TIMER1, /* TMR1 Advanced */
-    TIMER2, /* TMR2 General  */
-    TIMER3, /* TMR3 General  */
-    TIMER4, /* TMR4 General  */
-    TIMER5, /* TMR5 General  */
-    TIMER6, /* TMR6 Basic    */
-    TIMER7, /* TMR7 Basic    */
-    TIMER8, /* TMR8 Advanced */
-    TIMER9, /* TMR9 General */
-    TIMER10, /* TMR10 General */
-    TIMER11, /* TMR11 General */
-    TIMER12, /* TMR12 General */
-    TIMER13, /* TMR13 General */
-    TIMER14, /* TMR14 General */
-    TIMER_MAX,
-} timer_t;
+    TMR_UNIT_1,    /* Advanced */
+    TMR_UNIT_2,    /* General  */
+    TMR_UNIT_3,    /* General  */
+    TMR_UNIT_4,    /* General  */
+    TMR_UNIT_5,    /* General  */
+    TMR_UNIT_6,    /* Basic    */
+    TMR_UNIT_7,    /* Basic    */
+    TMR_UNIT_8,    /* Advanced */
+    TMR_UNIT_9,    /* General  */
+    TMR_UNIT_10,   /* General  */
+    TMR_UNIT_11,   /* General  */
+    TMR_UNIT_12,   /* General  */
+    TMR_UNIT_13,   /* General  */
+    TMR_UNIT_14,   /* General  */
+    TMR_UNIT_MAX,
+} tmr_unit_t;
 
-void timer_init(timer_t timer, uint32_t time, uint32_t irqp, cb_t func);
-void timer_cmd(timer_t timer, bool en);
+void timer_init(tmr_unit_t timer, uint32_t time, uint32_t irqp, cb_t func);
+void timer_cmd(tmr_unit_t timer, bool en);
 
 #endif

@@ -16,24 +16,24 @@
 #define SPI1_DMA_TX_EN  1
 #define SPI1_DMA_TX_IRQ_PRIORITY 10
 
-#define SPI1_DMA_TX     DMA1
-#define SPI1_DMA_TX_CH  DMA1_CHANNEL3
-#define SPI1_DMA_TX_IRQ DMA1_Channel3_IRQn    
-#define SPI1_DMA_TX_FLEX FLEX_CHANNEL3
-#define SPI1_DMA_TX_FLEX_REQ DMA_FLEXIBLE_SPI1_TX
-#define SPI1_DMA_TX_IRQHANDLER DMA1_Channel3_IRQHandler
+#define SPI1_DMA_TX             DMA1
+#define SPI1_DMA_TX_CH          DMA1_CHANNEL3
+#define SPI1_DMA_TX_IRQ         DMA1_Channel3_IRQn    
+#define SPI1_DMA_TX_FLEX        FLEX_CHANNEL3
+#define SPI1_DMA_TX_FLEX_REQ    DMA_FLEXIBLE_SPI1_TX
+#define SPI1_DMA_TX_IRQHANDLER  DMA1_Channel3_IRQHandler
 /********************************/
 
 /********SPI1 DMA RX SEL********/
 #define SPI1_DMA_RX_EN  0
 #define SPI1_DMA_RX_IRQ_PRIORITY 10
 
-#define SPI1_DMA_RX     DMA1
-#define SPI1_DMA_RX_CH  DMA1_CHANNEL2
-#define SPI1_DMA_RX_IRQ DMA1_Channel2_IRQn 
-#define SPI1_DMA_RX_FLEX FLEX_CHANNEL2
-#define SPI1_DMA_RX_FLEX_REQ DMA_FLEXIBLE_SPI1_RX
-#define SPI1_DMA_RX_IRQHANDLER DMA1_Channel2_IRQHandler
+#define SPI1_DMA_RX             DMA1
+#define SPI1_DMA_RX_CH          DMA1_CHANNEL2
+#define SPI1_DMA_RX_IRQ         DMA1_Channel2_IRQn 
+#define SPI1_DMA_RX_FLEX        FLEX_CHANNEL2
+#define SPI1_DMA_RX_FLEX_REQ    DMA_FLEXIBLE_SPI1_RX
+#define SPI1_DMA_RX_IRQHANDLER  DMA1_Channel2_IRQHandler
 /********************************/
 
 
@@ -47,24 +47,24 @@
 #define SPI2_DMA_TX_EN  0
 #define SPI2_DMA_TX_IRQ_PRIORITY 10
 
-#define SPI2_DMA_TX     DMA1
-#define SPI2_DMA_TX_CH  DMA1_CHANNEL5
-#define SPI2_DMA_TX_IRQ DMA1_Channel5_IRQn    
-#define SPI2_DMA_TX_FLEX FLEX_CHANNEL5
-#define SPI2_DMA_TX_FLEX_REQ DMA_FLEXIBLE_SPI2_TX 
-#define SPI2_DMA_TX_IRQHANDLER DMA1_Channel5_IRQHandler
+#define SPI2_DMA_TX             DMA1
+#define SPI2_DMA_TX_CH          DMA1_CHANNEL5
+#define SPI2_DMA_TX_IRQ         DMA1_Channel5_IRQn    
+#define SPI2_DMA_TX_FLEX        FLEX_CHANNEL5
+#define SPI2_DMA_TX_FLEX_REQ    DMA_FLEXIBLE_SPI2_TX 
+#define SPI2_DMA_TX_IRQHANDLER  DMA1_Channel5_IRQHandler
 /********************************/
 
 /********SPI2 DMA RX SEL********/
 #define SPI2_DMA_RX_EN  0
 #define SPI2_DMA_RX_IRQ_PRIORITY 10
 
-#define SPI2_DMA_RX     DMA1
-#define SPI2_DMA_RX_CH  DMA1_CHANNEL4
-#define SPI2_DMA_RX_IRQ DMA1_Channel4_IRQn 
-#define SPI2_DMA_RX_FLEX FLEX_CHANNEL4
-#define SPI2_DMA_RX_FLEX_REQ DMA_FLEXIBLE_SPI2_RX
-#define SPI2_DMA_RX_IRQHANDLER DMA1_Channel4_IRQHandler
+#define SPI2_DMA_RX             DMA1
+#define SPI2_DMA_RX_CH          DMA1_CHANNEL4
+#define SPI2_DMA_RX_IRQ         DMA1_Channel4_IRQn 
+#define SPI2_DMA_RX_FLEX        FLEX_CHANNEL4
+#define SPI2_DMA_RX_FLEX_REQ    DMA_FLEXIBLE_SPI2_RX
+#define SPI2_DMA_RX_IRQHANDLER  DMA1_Channel4_IRQHandler
 /********************************/
 
 
@@ -79,24 +79,24 @@
 #define SPI3_DMA_TX_EN  0
 #define SPI3_DMA_TX_IRQ_PRIORITY 10
 
-#define SPI3_DMA_TX     DMA2
-#define SPI3_DMA_TX_CH  DMA2_CHANNEL2
-#define SPI3_DMA_TX_IRQ DMA2_Channel2_IRQn     
-#define SPI3_DMA_TX_FLEX FLEX_CHANNEL2
-#define SPI3_DMA_TX_FLEX_REQ DMA_FLEXIBLE_SPI3_TX
-#define SPI3_DMA_TX_IRQHANDLER DMA2_Channel2_IRQHandler 
+#define SPI3_DMA_TX             DMA2
+#define SPI3_DMA_TX_CH          DMA2_CHANNEL2
+#define SPI3_DMA_TX_IRQ         DMA2_Channel2_IRQn     
+#define SPI3_DMA_TX_FLEX        FLEX_CHANNEL2
+#define SPI3_DMA_TX_FLEX_REQ    DMA_FLEXIBLE_SPI3_TX
+#define SPI3_DMA_TX_IRQHANDLER  DMA2_Channel2_IRQHandler 
 /********************************/
 
 /********SPI3 DMA RX SEL********/
 #define SPI3_DMA_RX_EN  0
 #define SPI3_DMA_RX_IRQ_PRIORITY 10
 
-#define SPI3_DMA_RX     DMA2
-#define SPI3_DMA_RX_CH  DMA2_CHANNEL1
-#define SPI3_DMA_RX_IRQ DMA2_Channel1_IRQn 
-#define SPI3_DMA_RX_FLEX FLEX_CHANNEL1
-#define SPI3_DMA_RX_FLEX_REQ DMA_FLEXIBLE_SPI3_RX
-#define SPI3_DMA_RX_IRQHANDLER DMA2_Channel1_IRQHandler
+#define SPI3_DMA_RX             DMA2
+#define SPI3_DMA_RX_CH          DMA2_CHANNEL1
+#define SPI3_DMA_RX_IRQ         DMA2_Channel1_IRQn 
+#define SPI3_DMA_RX_FLEX        FLEX_CHANNEL1
+#define SPI3_DMA_RX_FLEX_REQ    DMA_FLEXIBLE_SPI3_RX
+#define SPI3_DMA_RX_IRQHANDLER  DMA2_Channel1_IRQHandler
 /********************************/
 
 
@@ -112,24 +112,24 @@
 #define SPI4_DMA_TX_EN  0
 #define SPI4_DMA_TX_IRQ_PRIORITY 10
 
-#define SPI4_DMA_TX     DMA2
-#define SPI4_DMA_TX_CH  DMA2_CHANNEL4
-#define SPI4_DMA_TX_IRQ DMA2_Channel4_5_IRQn     
-#define SPI4_DMA_TX_FLEX FLEX_CHANNEL4
-#define SPI4_DMA_TX_FLEX_REQ DMA_FLEXIBLE_SPI4_TX
-#define SPI4_DMA_TX_IRQHANDLER DMA2_Channel4_5_IRQHandler 
+#define SPI4_DMA_TX             DMA2
+#define SPI4_DMA_TX_CH          DMA2_CHANNEL4
+#define SPI4_DMA_TX_IRQ         DMA2_Channel4_5_IRQn     
+#define SPI4_DMA_TX_FLEX        FLEX_CHANNEL4
+#define SPI4_DMA_TX_FLEX_REQ    DMA_FLEXIBLE_SPI4_TX
+#define SPI4_DMA_TX_IRQHANDLER  DMA2_Channel4_5_IRQHandler 
 /********************************/
 
 /********SPI4 DMA RX SEL********/
 #define SPI4_DMA_RX_EN  0
 #define SPI4_DMA_RX_IRQ_PRIORITY 10
 
-#define SPI4_DMA_RX     DMA2
-#define SPI4_DMA_RX_CH  DMA2_CHANNEL3
-#define SPI4_DMA_RX_IRQ DMA2_Channel3_IRQn 
-#define SPI4_DMA_RX_FLEX FLEX_CHANNEL3
-#define SPI4_DMA_RX_FLEX_REQ DMA_FLEXIBLE_SPI4_RX
-#define SPI4_DMA_RX_IRQHANDLER DMA2_Channel3_IRQHandler
+#define SPI4_DMA_RX             DMA2
+#define SPI4_DMA_RX_CH          DMA2_CHANNEL3
+#define SPI4_DMA_RX_IRQ         DMA2_Channel3_IRQn 
+#define SPI4_DMA_RX_FLEX        FLEX_CHANNEL3
+#define SPI4_DMA_RX_FLEX_REQ    DMA_FLEXIBLE_SPI4_RX
+#define SPI4_DMA_RX_IRQHANDLER  DMA2_Channel3_IRQHandler
 /********************************/
 
 typedef struct
@@ -140,6 +140,7 @@ typedef struct
 
 typedef struct
 {
+    spi_type *instance;
     spi_frame_bit_num_type bit_num;
     dma_channel_type *dma_tx;
     dma_channel_type *dma_rx;

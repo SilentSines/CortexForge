@@ -14,7 +14,7 @@
 
 #define IR_TX_PWM_CH            TMR2_PWM_CH3_PA2
 #define IR_TX_POLARITY          PWM_POLARITY_LOW
-#define IR_TX_PROTOCOL_TIMER    TIMER7
+#define IR_TX_PROTOCOL_TIMER    TMR_UNIT_7
 
 #define IR_TX_STATUS_LED_EN 1
 #define IR_TX_STATUS_LED    LED_D1
@@ -141,7 +141,7 @@ void ir_tx_handle(void)
                                 #endif
                                     if (--ir_tx.repeat == 0)
                                     {
-                                        timer_cmd(TIMER7, false);
+                                        timer_cmd(IR_TX_PROTOCOL_TIMER, false);
                                         ir_tx.status = IR_STATUS_IDLE;
                                         if (ir_tx.cb)
                                         {

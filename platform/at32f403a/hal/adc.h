@@ -3,13 +3,12 @@
 
 #define ADC_SAMPLE_INVALID  0xFFFF
 
-typedef enum {
-    ADC_SAMPLE_TIME_FASTEST,
-    ADC_SAMPLE_TIME_FAST,
-    ADC_SAMPLE_TIME_MEDIUM,
-    ADC_SAMPLE_TIME_SLOW,
-    ADC_SAMPLE_TIME_SLOWEST,
-} adc_sample_time_t;
+typedef enum
+{
+    ADC_UNIT_1,
+    ADC_UNIT_2,
+    ADC_UNIT_3,
+} adc_unit_t;
 
 typedef enum
 {
@@ -32,11 +31,20 @@ typedef enum
     ADC_CH_MAX,
 } adc_ch_t;
 
-void adc_init(adc_type *adc, bool scan_en);
+typedef enum 
+{
+    ADC_SAMPLE_TIME_FASTEST,
+    ADC_SAMPLE_TIME_FAST,
+    ADC_SAMPLE_TIME_MEDIUM,
+    ADC_SAMPLE_TIME_SLOW,
+    ADC_SAMPLE_TIME_SLOWEST,
+} adc_sample_time_t;
+
+void adc_init(adc_unit_t adc, bool scan_en);
 void adc_setup_channel(adc_ch_t ch);
-uint16_t adc_sample_one(adc_type *adc, adc_ch_t ch, adc_sample_time_t sample_time);
-void adc_dma_config(adc_type *adc, adc_ch_t *ch, uint8_t ch_num, adc_sample_time_t sample_time);
-void adc_dma_start(adc_type *adc, uint16_t *buf, uint32_t len, cb_t func);
-void adc_dma_stop(adc_type *adc);
+uint16_t adc_sample_one(adc_unit_t adc, adc_ch_t ch, adc_sample_time_t sample_time);
+void adc_dma_config(adc_unit_t adc, adc_ch_t *ch, uint8_t ch_num, adc_sample_time_t sample_time);
+void adc_dma_start(adc_unit_t adc, uint16_t *buf, uint32_t len, cb_t func);
+void adc_dma_stop(adc_unit_t adc);
 
 #endif

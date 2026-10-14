@@ -13,7 +13,7 @@
 #define OLED_USE_SPI  1
 
 #if OLED_USE_SPI == 1
-    #define OLED_SPI    SPI1
+    #define OLED_SPI     SPI_UNIT_1
     #define OLED_DC_PIN  GPIO_PA6
     #define OLED_DC_H()  GPIO_OUT_H(OLED_DC_PIN)
     #define OLED_DC_L()  GPIO_OUT_L(OLED_DC_PIN)

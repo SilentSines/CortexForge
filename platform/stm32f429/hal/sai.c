@@ -1,4 +1,4 @@
-#include "bsp.h" 
+#include "hal.h"
 #include "sai_cfg.h"
 
 typedef struct
@@ -33,26 +33,23 @@ static sai_drv_t saia_drv;
 static sai_drv_t saib_drv;
 #endif
 
-static sai_drv_t* sai_select(sai_port_t sai)
+static sai_drv_t* sai_select(sai_unit_t sai)
 {
-#if SAIA_EN == 1
-    if (sai == SAIA) 
+    switch (sai)
     {
-        return &saia_drv;
-    }
-#endif
+    #if SAIA_EN == 1
+        case SAI_UNIT_A : return &saia_drv; break;
+    #endif
 
-#if SAIB_EN == 1
-    if (sai == SAIB) 
-    {
-        return &saib_drv;
-    }
-#endif
+    #if SAIB_EN == 1
+        case SAI_UNIT_B : return &saib_drv; break;
+    #endif
 
-    return NULL;
+        default : return NULL; break;
+    }
 }
 
-void sai_bus_init(sai_port_t sai, sai_mode_t mode)
+void sai_bus_init(sai_unit_t sai, sai_mode_t mode)
 {
     IRQn_Type irq;
     uint32_t irqp;
@@ -64,25 +61,27 @@ void sai_bus_init(sai_port_t sai, sai_mode_t mode)
 		return;
 	}
     
-    if (sai == SAIA)
+    switch (sai)
     {
-        gpio_pin_init(SAIA_MCLK_PIN, GPIO_AF_PP, GPIO_AF6_SAI1);
-        gpio_pin_init(SAIA_FS_PIN, GPIO_AF_PP, GPIO_AF6_SAI1);
-        gpio_pin_init(SAIA_SCK_PIN, GPIO_AF_PP, GPIO_AF6_SAI1);
-        gpio_pin_init(SAIA_SD_PIN, GPIO_AF_PP, GPIO_AF6_SAI1);
+        case SAI_UNIT_A :   gpio_pin_init(SAIA_MCLK_PIN, GPIO_AF_PP, GPIO_AF6_SAI1);
+                            gpio_pin_init(SAIA_FS_PIN, GPIO_AF_PP, GPIO_AF6_SAI1);
+                            gpio_pin_init(SAIA_SCK_PIN, GPIO_AF_PP, GPIO_AF6_SAI1);
+                            gpio_pin_init(SAIA_SD_PIN, GPIO_AF_PP, GPIO_AF6_SAI1);
 
-        irq = SAIA_DMA_IRQ;
-        irqp = SAIA_DMA_IRQ_PRIORITY;
-    }
-    else
-    {
-        gpio_pin_init(SAIB_MCLK_PIN, GPIO_AF_PP, GPIO_AF6_SAI1);
-        gpio_pin_init(SAIB_FS_PIN, GPIO_AF_PP, GPIO_AF6_SAI1);
-        gpio_pin_init(SAIB_SCK_PIN, GPIO_AF_PP, GPIO_AF6_SAI1);
-        gpio_pin_init(SAIB_SD_PIN, GPIO_AF_PP, GPIO_AF6_SAI1);
+                            irq = SAIA_DMA_IRQ;
+                            irqp = SAIA_DMA_IRQ_PRIORITY;
+                            break;
 
-        irq = SAIB_DMA_IRQ;
-        irqp = SAIB_DMA_IRQ_PRIORITY;
+        case SAI_UNIT_B :   gpio_pin_init(SAIB_MCLK_PIN, GPIO_AF_PP, GPIO_AF6_SAI1);
+                            gpio_pin_init(SAIB_FS_PIN, GPIO_AF_PP, GPIO_AF6_SAI1);
+                            gpio_pin_init(SAIB_SCK_PIN, GPIO_AF_PP, GPIO_AF6_SAI1);
+                            gpio_pin_init(SAIB_SD_PIN, GPIO_AF_PP, GPIO_AF6_SAI1);
+
+                            irq = SAIB_DMA_IRQ;
+                            irqp = SAIB_DMA_IRQ_PRIORITY;
+                            break;
+
+        default : return; break;
     }
 
     __HAL_RCC_SAI1_CLK_ENABLE(); 
@@ -96,11 +95,9 @@ void sai_bus_init(sai_port_t sai, sai_mode_t mode)
         default :            audio_mode = SAI_MODEMASTER_TX; break;
     }
                           
-    sai_drv->handle.Instance = (sai == SAIA) ? SAI1_Block_A : SAI1_Block_B;                    
+    sai_drv->handle.Instance = (sai == SAI_UNIT_A) ? SAI1_Block_A : SAI1_Block_B;                    
     sai_drv->handle.Init.AudioMode = audio_mode;                      
-    sai_drv->handle.Init.Synchro = ((audio_mode == SAI_MODEMASTER_TX) || (audio_mode == SAI_MODEMASTER_RX)) 
-                                ? SAI_ASYNCHRONOUS 
-                                : SAI_SYNCHRONOUS;            
+    sai_drv->handle.Init.Synchro = ((audio_mode == SAI_MODEMASTER_TX) || (audio_mode == SAI_MODEMASTER_RX)) ? SAI_ASYNCHRONOUS : SAI_SYNCHRONOUS;            
     sai_drv->handle.Init.OutputDrive = SAI_OUTPUTDRIVE_ENABLE;  
     sai_drv->handle.Init.NoDivider = SAI_MASTERDIVIDER_ENABLE;  
     sai_drv->handle.Init.FIFOThreshold = SAI_FIFOTHRESHOLD_1QF; 
@@ -140,8 +137,8 @@ void sai_bus_init(sai_port_t sai, sai_mode_t mode)
 
         sai_drv->dma.Init.Direction = DMA_PERIPH_TO_MEMORY;
     }
-    sai_drv->dma.Instance = (sai == SAIA) ? SAIA_DMA_STREAM : SAIB_DMA_STREAM;
-    sai_drv->dma.Init.Channel = (sai == SAIA) ? SAIA_DMA_CH : SAIB_DMA_CH;
+    sai_drv->dma.Instance = (sai == SAI_UNIT_A) ? SAIA_DMA_STREAM : SAIB_DMA_STREAM;
+    sai_drv->dma.Init.Channel = (sai == SAI_UNIT_A) ? SAIA_DMA_CH : SAIB_DMA_CH;
     sai_drv->dma.Init.PeriphInc = DMA_PINC_DISABLE;
     sai_drv->dma.Init.MemInc = DMA_MINC_ENABLE;
     sai_drv->dma.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
@@ -160,7 +157,7 @@ void sai_bus_init(sai_port_t sai, sai_mode_t mode)
     HAL_NVIC_EnableIRQ(irq);
 }
 
-void sai_set_cfg(sai_port_t sai, sai_sample_rate_t samplerate, sai_data_width_t width)
+void sai_set_cfg(sai_unit_t sai, sai_sample_rate_t samplerate, sai_data_width_t width)
 {
     uint8_t i = 0;
     uint32_t data_size;
@@ -172,14 +169,14 @@ void sai_set_cfg(sai_port_t sai, sai_sample_rate_t samplerate, sai_data_width_t 
 		return;
 	}
 
-    for (i = 0; i < ARRAY_SIZE(sai_psc_table); i++) 
+    for (i = 0; i < (sizeof(sai_psc_table) / sizeof(sai_psc_table[0])); i++) 
     {
         if (samplerate == sai_psc_table[i].freq)
         {    
             break;
         }
     }
-    if (i == ARRAY_SIZE(sai_psc_table))
+    if (i == (sizeof(sai_psc_table) / sizeof(sai_psc_table[0])))
     {    
         return;    
     }                                             
@@ -192,7 +189,7 @@ void sai_set_cfg(sai_port_t sai, sai_sample_rate_t samplerate, sai_data_width_t 
 		hal_error_handler();
 	}
 
-    if (sai == SAIA)
+    if (sai == SAI_UNIT_A)
     {
         __HAL_RCC_SAI_BLOCKACLKSOURCE_CONFIG(RCC_SAIACLKSOURCE_PLLI2S); 
     }
@@ -243,7 +240,7 @@ void sai_set_cfg(sai_port_t sai, sai_sample_rate_t samplerate, sai_data_width_t 
 	}
 } 
 
-void sai_set_dma(sai_port_t sai, void* buf0, void *buf1, uint32_t size, cb_arg_t func)
+void sai_set_dma(sai_unit_t sai, void* buf0, void *buf1, uint32_t size, cb_arg_t func)
 { 
     sai_drv_t *sai_drv = sai_select(sai);
 
@@ -305,7 +302,7 @@ void sai_set_dma(sai_port_t sai, void* buf0, void *buf1, uint32_t size, cb_arg_t
     sai_drv->func = func;
 }
 
-void sai_start(sai_port_t sai)
+void sai_start(sai_unit_t sai)
 {
     sai_drv_t *sai_drv = sai_select(sai);
 
@@ -319,7 +316,7 @@ void sai_start(sai_port_t sai)
     SET_BIT(sai_drv->handle.Instance->CR1, SAI_xCR1_DMAEN);
 }
 
-void sai_stop(sai_port_t sai)
+void sai_stop(sai_unit_t sai)
 {
     sai_drv_t *sai_drv = sai_select(sai);
 
@@ -332,7 +329,7 @@ void sai_stop(sai_port_t sai)
     HAL_SAI_DMAStop(&sai_drv->handle);
 }
 
-static void sai_dma_irq_handle(sai_port_t sai)
+static void sai_dma_irq_handle(sai_unit_t sai)
 {
     sai_drv_t *sai_drv = sai_select(sai);
 
@@ -371,13 +368,13 @@ static void sai_dma_irq_handle(sai_port_t sai)
 #if SAIA_DMA_EN
 void SAIA_DMA_IRQHANDLER(void)
 {   	
-    sai_dma_irq_handle(SAIA);						 
+    sai_dma_irq_handle(SAI_UNIT_A);						 
 } 
 #endif 
 
 #if SAIB_DMA_EN
 void SAIB_DMA_IRQHANDLER(void)
 {   
-    sai_dma_irq_handle(SAIB);		
+    sai_dma_irq_handle(SAI_UNIT_B);		
 }  
 #endif

@@ -33,10 +33,11 @@ typedef struct
 {
     gpio_pin_t pin;
     uint32_t channel;
-} adc_pin_t;
+} adc_map_t;
 
 typedef struct
 {
+    adc_type *instance; 
     dma_channel_type *dma;
     adc_ch_t sampleone_ch;
     bool sampling; 

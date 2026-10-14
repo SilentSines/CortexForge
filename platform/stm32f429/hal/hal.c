@@ -1,4 +1,4 @@
-#include "bsp.h"
+#include "hal.h"
 
 void system_clock_config(void)
 {

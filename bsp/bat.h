@@ -10,7 +10,7 @@
 #define BAT_CHG_PIN     GPIO_PB1
 #define BAT_STB_PIN     GPIO_PB2
 
-#define BAT_ADC         ADC1
+#define BAT_ADC         ADC_UNIT_1
 #define BAT_AD_CH       ADC123_CH0_PA0
 
 typedef enum 

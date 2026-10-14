@@ -10,7 +10,7 @@
 #define UART7_EN 0 /* UART7 */
 #define UART8_EN 0 /* UART8 */
 
-// #define STDIO_COM COM2 // printf fun
+// #define STDIO_COM UART_UNIT_2 // printf fun
 
 /****************UART1 CONFIG****************/
 #define UART1_TX_BUF_SIZE	1024
@@ -79,7 +79,7 @@
 
 typedef struct
 {
-	usart_type *uart;
+	usart_type *instance;
 	uint8_t *tx_ring_buf;					
 	uint8_t *rx_ring_buf;
 	uint32_t tx_buf_size;
@@ -91,6 +91,6 @@ typedef struct
 	__IO uint32_t rx_read;
 	__IO uint32_t rx_count; 
 	__IO bool busy;								
-} uart_t;
+} uart_drv_t;
 
 #endif

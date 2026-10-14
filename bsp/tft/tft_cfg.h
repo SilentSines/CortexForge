@@ -13,7 +13,7 @@
 #define TFT_USE_SPI 1
 
 #if TFT_USE_SPI == 1
-    #define TFT_SPI SPI1
+    #define TFT_SPI SPI_UNIT_1
     #define TFT_DC_PIN GPIO_PA6
     #define TFT_DC_H() GPIO_OUT_H(TFT_DC_PIN)
     #define TFT_DC_L() GPIO_OUT_L(TFT_DC_PIN)
