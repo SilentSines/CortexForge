@@ -172,7 +172,7 @@ void uart_bus_init(uart_unit_t uart, uint32_t baud, uint32_t irqp)
 	HAL_NVIC_EnableIRQ(irq);
 }
 
-void uart_send_buf(uart_unit_t uart, const uint8_t *buf, uint32_t size)
+void uart_send(uart_unit_t uart, const uint8_t *buf, uint32_t size)
 {
 	uint32_t i;
 	__IO uint32_t count;
@@ -213,7 +213,7 @@ void uart_send_buf(uart_unit_t uart, const uint8_t *buf, uint32_t size)
 
 void uart_send_byte(uart_unit_t uart, uint8_t data)
 {
-	uart_send_buf(uart, &data, 1);
+	uart_send(uart, &data, 1);
 }
 
 uint32_t uart_recv(uart_unit_t uart, uint8_t *buf, uint32_t size)

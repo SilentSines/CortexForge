@@ -77,6 +77,11 @@ add_compile_options(
     $<$<COMPILE_LANGUAGE:C>:-g>
 )
 
+# ARM: silence extraneous parentheses warning from vendor sources
+if(COMPILER_TYPE STREQUAL "ARM")
+    add_compile_options($<$<COMPILE_LANGUAGE:C>:-Wno-parentheses-equality>)
+endif()
+
 # GCC: also pass -fshort-wchar to linker to silence wchar_t size mismatch
 if(COMPILER_TYPE STREQUAL "GCC")
     add_link_options(-Wl,--no-wchar-size-warning)

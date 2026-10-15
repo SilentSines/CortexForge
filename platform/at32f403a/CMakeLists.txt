@@ -70,6 +70,9 @@ set(SVD_FILE "platform/${PLATFORM}/AT32F403Axx.svd" PARENT_SCOPE)
 include(${CMAKE_CURRENT_LIST_DIR}/vendor/sources.cmake)
 add_library(vendor OBJECT ${VENDOR_SOURCE})
 target_compile_options(vendor PRIVATE ${MCU_FLAGS})
+if(COMPILER_TYPE STREQUAL "ARM")
+    target_compile_options(vendor PRIVATE $<$<COMPILE_LANGUAGE:C>:-Wno-parentheses-equality>)
+endif()
 target_compile_definitions(vendor PRIVATE $<$<COMPILE_LANGUAGE:C>:${PROJECT_DEFINES}>)
 
 # --- Startup (assembly + system + interrupts) ---
@@ -84,7 +87,7 @@ target_compile_definitions(startup PRIVATE
 if(COMPILER_TYPE STREQUAL "GCC")
     set_source_files_properties(${STARTUP_ASM} PROPERTIES LANGUAGE ASM)
 else()
-    set(ASM_FLAGS "--cpu Cortex-M4.fp")
+    set(ASM_FLAGS "--cpu Cortex-M4.fp --diag_suppress=A1950W,A3912W")
     if(USE_MICROLIB)
         set(ASM_FLAGS "${ASM_FLAGS} --pd \"__MICROLIB SETA 1\"")
     endif()

@@ -36,7 +36,6 @@ void hal_init(void)
 	
 	HAL_Init();
 	system_clock_config();
-
 	
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 	__HAL_RCC_GPIOB_CLK_ENABLE();
@@ -44,7 +43,7 @@ void hal_init(void)
 	__HAL_RCC_GPIOD_CLK_ENABLE();
 	__HAL_RCC_GPIOE_CLK_ENABLE();
 	__HAL_RCC_GPIOF_CLK_ENABLE();
-	__HAL_RCC_DMA1_CLK_ENABLE();
+	// __HAL_RCC_DMA1_CLK_ENABLE();
 	// __HAL_RCC_DMA2_CLK_ENABLE();
 	// __HAL_RCC_FSMC_CLK_ENABLE();
 
