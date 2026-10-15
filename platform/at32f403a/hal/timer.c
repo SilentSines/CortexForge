@@ -2,7 +2,7 @@
 
 typedef struct
 {
-    tmr_type *tmr;
+    tmr_type *instance;
     crm_periph_clock_type clk;
     IRQn_Type irq;         
 } timer_map_t;
@@ -25,7 +25,7 @@ static const timer_map_t timer_map_table[] =
     {TMR14, CRM_TMR14_PERIPH_CLOCK, TMR8_TRG_HALL_TMR14_IRQn},
 };
 
-static cb_t timer_cb[TMR_UNIT_MAX];
+static cb_t timer_cb[TIMER_UNIT_MAX];
 
 static void time_factorization(uint32_t time, uint32_t clock, uint16_t *pPeriod, uint16_t *pPrescaler) 
 {
@@ -54,54 +54,54 @@ static void time_factorization(uint32_t time, uint32_t clock, uint16_t *pPeriod,
     *pPrescaler = prescaler;
 }
 
-void timer_init(tmr_unit_t timer, uint32_t time, uint32_t irqp, cb_t func)
+void timer_init(timer_unit_t timer, uint32_t time, uint32_t irqp, cb_t func)
 {
     uint16_t period = 0;
     uint16_t prescaler = 0;
     
-    if (timer >= TMR_UNIT_MAX)
+    if (timer >= TIMER_UNIT_MAX)
     {
         return;
     }
     
-    const timer_map_t *tmr = &timer_map_table[timer];
+    const timer_map_t *map = &timer_map_table[timer];
 
-    crm_periph_clock_enable(tmr->clk, TRUE);
+    crm_periph_clock_enable(map->clk, TRUE);
 
     time_factorization(time, SystemCoreClock, &period, &prescaler);
-    tmr_base_init(tmr->tmr, period - 1, prescaler - 1);
-    tmr_period_buffer_enable(tmr->tmr, FALSE);
-    if (timer <= TMR_UNIT_8)
+    tmr_base_init(map->instance, period - 1, prescaler - 1);
+    tmr_period_buffer_enable(map->instance, FALSE);
+    if (timer <= TIMER_UNIT_8)
     {
-        tmr_primary_mode_select(tmr->tmr, TMR_PRIMARY_SEL_RESET);
+        tmr_primary_mode_select(map->instance, TMR_PRIMARY_SEL_RESET);
     }
-    if (timer <= TMR_UNIT_5 || timer >= TMR_UNIT_8)
+    if (timer <= TIMER_UNIT_5 || timer >= TIMER_UNIT_8)
     {
-        tmr_cnt_dir_set(tmr->tmr, TMR_COUNT_UP);
-        tmr_clock_source_div_set(tmr->tmr, TMR_CLOCK_DIV1);
+        tmr_cnt_dir_set(map->instance, TMR_COUNT_UP);
+        tmr_clock_source_div_set(map->instance, TMR_CLOCK_DIV1);
     }
-    if (timer <= TMR_UNIT_5 || timer == TMR_UNIT_8 || timer == TMR_UNIT_9 || timer == TMR_UNIT_12)
+    if (timer <= TIMER_UNIT_5 || timer == TIMER_UNIT_8 || timer == TIMER_UNIT_9 || timer == TIMER_UNIT_12)
     {
-        tmr_sub_sync_mode_set(tmr->tmr, FALSE);
+        tmr_sub_sync_mode_set(map->instance, FALSE);
     }
-    if (timer == TMR_UNIT_1 || timer == TMR_UNIT_8)
+    if (timer == TIMER_UNIT_1 || timer == TIMER_UNIT_8)
     {
-        tmr_repetition_counter_set(tmr->tmr, 0);
+        tmr_repetition_counter_set(map->instance, 0);
     }
-    tmr_overflow_request_source_set(tmr->tmr, TRUE);
-    tmr_interrupt_enable(tmr->tmr, TMR_OVF_INT, TRUE);
-    nvic_irq_enable(tmr->irq, irqp, 0);
+    tmr_overflow_request_source_set(map->instance, TRUE);
+    tmr_interrupt_enable(map->instance, TMR_OVF_INT, TRUE);
+    nvic_irq_enable(map->irq, irqp, 0);
     timer_cb[timer] = func; 
 }
 
-void timer_cmd(tmr_unit_t timer, bool en)
+void timer_cmd(timer_unit_t timer, bool en)
 {
-    if (timer >= TMR_UNIT_MAX)
+    if (timer >= TIMER_UNIT_MAX)
     {
         return;
     }
 
-    tmr_counter_enable(timer_map_table[timer].tmr, en ? TRUE : FALSE);
+    tmr_counter_enable(timer_map_table[timer].instance, en ? TRUE : FALSE);
 }
 
 #define TMR_IRQHANDLER(x, y)                              \

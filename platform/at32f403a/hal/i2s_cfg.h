@@ -3,7 +3,7 @@
 
 #define I2S1_EN 0
 #define I2S2_EN 0
-#define I2S3_EN 1
+#define I2S3_EN 0
 #define I2S4_EN 0
 
 /********I2S1 PIN SEL********/
@@ -91,7 +91,7 @@
 /********************************/
 
 /********I2S3 DMA RX SEL********/
-#define I2S3_DMA_RX_EN 1
+#define I2S3_DMA_RX_EN 0
 #define I2S3_DMA_RX_IRQ_PRIORITY 10
 
 #define I2S3_DMA_RX             DMA2

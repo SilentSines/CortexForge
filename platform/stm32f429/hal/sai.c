@@ -123,32 +123,28 @@ void sai_bus_init(sai_unit_t sai, sai_mode_t mode)
 
     if ((audio_mode == SAI_MODEMASTER_TX) || (audio_mode == SAI_MODESLAVE_TX))
     {
-        sai_drv->hdma_tx = &sai_drv->dma;
-        sai_drv->hdma_rx = NULL;
-        __HAL_LINKDMA(&sai_drv->handle, hdmatx, sai_drv->dma);
+        __HAL_LINKDMA(&sai_drv->handle, hdmatx, sai_drv->hdma);
 
-        sai_drv->dma.Init.Direction = DMA_MEMORY_TO_PERIPH;
+        sai_drv->hdma.Init.Direction = DMA_MEMORY_TO_PERIPH;
     }
     else if ((audio_mode == SAI_MODEMASTER_RX) || (audio_mode == SAI_MODESLAVE_RX))
     {
-        sai_drv->hdma_rx = &sai_drv->dma;
-        sai_drv->hdma_tx = NULL;
-        __HAL_LINKDMA(&sai_drv->handle, hdmarx, sai_drv->dma);
+        __HAL_LINKDMA(&sai_drv->handle, hdmarx, sai_drv->hdma);
 
-        sai_drv->dma.Init.Direction = DMA_PERIPH_TO_MEMORY;
+        sai_drv->hdma.Init.Direction = DMA_PERIPH_TO_MEMORY;
     }
-    sai_drv->dma.Instance = (sai == SAI_UNIT_A) ? SAIA_DMA_STREAM : SAIB_DMA_STREAM;
-    sai_drv->dma.Init.Channel = (sai == SAI_UNIT_A) ? SAIA_DMA_CH : SAIB_DMA_CH;
-    sai_drv->dma.Init.PeriphInc = DMA_PINC_DISABLE;
-    sai_drv->dma.Init.MemInc = DMA_MINC_ENABLE;
-    sai_drv->dma.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
-    sai_drv->dma.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-    sai_drv->dma.Init.Mode = DMA_CIRCULAR;
-    sai_drv->dma.Init.Priority = DMA_PRIORITY_HIGH;
-    sai_drv->dma.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
-    sai_drv->dma.Init.MemBurst = DMA_MBURST_SINGLE;
-    sai_drv->dma.Init.PeriphBurst = DMA_PBURST_SINGLE;
-    if (HAL_DMA_Init(&sai_drv->dma) != HAL_OK)
+    sai_drv->hdma.Instance = (sai == SAI_UNIT_A) ? SAIA_DMA_STREAM : SAIB_DMA_STREAM;
+    sai_drv->hdma.Init.Channel = (sai == SAI_UNIT_A) ? SAIA_DMA_CH : SAIB_DMA_CH;
+    sai_drv->hdma.Init.PeriphInc = DMA_PINC_DISABLE;
+    sai_drv->hdma.Init.MemInc = DMA_MINC_ENABLE;
+    sai_drv->hdma.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+    sai_drv->hdma.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+    sai_drv->hdma.Init.Mode = DMA_CIRCULAR;
+    sai_drv->hdma.Init.Priority = DMA_PRIORITY_HIGH;
+    sai_drv->hdma.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+    sai_drv->hdma.Init.MemBurst = DMA_MBURST_SINGLE;
+    sai_drv->hdma.Init.PeriphBurst = DMA_PBURST_SINGLE;
+    if (HAL_DMA_Init(&sai_drv->hdma) != HAL_OK)
 	{
 		hal_error_handler();
 	}
@@ -218,29 +214,29 @@ void sai_set_cfg(sai_unit_t sai, sai_sample_rate_t samplerate, sai_data_width_t 
     
     switch(data_size)
     {
-        case SAI_DATASIZE_8 :   sai_drv->dma.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
-                                sai_drv->dma.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+        case SAI_DATASIZE_8 :   sai_drv->hdma.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+                                sai_drv->hdma.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
                                 break;
 
         case SAI_DATASIZE_10 :
-        case SAI_DATASIZE_16 :  sai_drv->dma.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
-                                sai_drv->dma.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
+        case SAI_DATASIZE_16 :  sai_drv->hdma.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+                                sai_drv->hdma.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
                                 break;
 
         case SAI_DATASIZE_20 :
         case SAI_DATASIZE_24 :
-        case SAI_DATASIZE_32 :  sai_drv->dma.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
-                                sai_drv->dma.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
+        case SAI_DATASIZE_32 :  sai_drv->hdma.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
+                                sai_drv->hdma.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
                                 break;
             
     }
-    if (HAL_DMA_Init(&sai_drv->dma) != HAL_OK)
+    if (HAL_DMA_Init(&sai_drv->hdma) != HAL_OK)
 	{
 		hal_error_handler();
 	}
 } 
 
-void sai_set_dma(sai_unit_t sai, void* buf0, void *buf1, uint32_t size, cb_arg_t func)
+void sai_set_dma(sai_unit_t sai, void* buf0, void *buf1, uint32_t len, cb_arg_t func)
 { 
     sai_drv_t *sai_drv = sai_select(sai);
 
@@ -249,20 +245,22 @@ void sai_set_dma(sai_unit_t sai, void* buf0, void *buf1, uint32_t size, cb_arg_t
 		return;
 	}
 
-    __HAL_DMA_DISABLE(&sai_drv->dma); 
+    uint32_t dr_addr = (uint32_t)&sai_drv->handle.Instance->DR;
+
+    __HAL_DMA_DISABLE(&sai_drv->hdma); 
 
     if (buf1)
     {
-        if (sai_drv->hdma_tx)
+        if (sai_drv->handle.hdmatx)
         {
-            if (HAL_DMAEx_MultiBufferStart(sai_drv->hdma_tx, (uint32_t)buf0, (uint32_t)&sai_drv->handle.Instance->DR, (uint32_t)buf1, size) != HAL_OK)
+            if (HAL_DMAEx_MultiBufferStart(sai_drv->handle.hdmatx, (uint32_t)buf0, dr_addr, (uint32_t)buf1, len) != HAL_OK)
             {
                 hal_error_handler();
             }
         }
-        else if (sai_drv->hdma_rx)
+        else if (sai_drv->handle.hdmarx)
         {
-            if (HAL_DMAEx_MultiBufferStart(sai_drv->hdma_rx, (uint32_t)&sai_drv->handle.Instance->DR, (uint32_t)buf0, (uint32_t)buf1, size) != HAL_OK)
+            if (HAL_DMAEx_MultiBufferStart(sai_drv->handle.hdmarx, dr_addr, (uint32_t)buf0, (uint32_t)buf1, len) != HAL_OK)
             {
                 hal_error_handler();
             }
@@ -274,17 +272,17 @@ void sai_set_dma(sai_unit_t sai, void* buf0, void *buf1, uint32_t size, cb_arg_t
     }
     else
     {
-        if (sai_drv->hdma_tx)
+        if (sai_drv->handle.hdmatx)
         {
-            sai_drv->hdma_tx->Instance->M0AR = (uint32_t)buf0;
-            sai_drv->hdma_tx->Instance->NDTR = size;
-            sai_drv->hdma_tx->Instance->PAR = (uint32_t)&sai_drv->handle.Instance->DR;
+            sai_drv->handle.hdmatx->Instance->M0AR = (uint32_t)buf0;
+            sai_drv->handle.hdmatx->Instance->NDTR = len;
+            sai_drv->handle.hdmatx->Instance->PAR = dr_addr;
         }
-        else if (sai_drv->hdma_rx)
+        else if (sai_drv->handle.hdmarx)
         {
-            sai_drv->hdma_rx->Instance->M0AR = (uint32_t)buf0;
-            sai_drv->hdma_rx->Instance->NDTR = size;
-            sai_drv->hdma_rx->Instance->PAR =  (uint32_t)&sai_drv->handle.Instance->DR;
+            sai_drv->handle.hdmarx->Instance->M0AR = (uint32_t)buf0;
+            sai_drv->handle.hdmarx->Instance->NDTR = len;
+            sai_drv->handle.hdmarx->Instance->PAR = dr_addr;
         }
         else
         {
@@ -292,12 +290,12 @@ void sai_set_dma(sai_unit_t sai, void* buf0, void *buf1, uint32_t size, cb_arg_t
         }
     }
     
-    __HAL_DMA_CLEAR_FLAG (&sai_drv->dma, __HAL_DMA_GET_TC_FLAG_INDEX(&sai_drv->dma));
-    __HAL_DMA_CLEAR_FLAG (&sai_drv->dma, __HAL_DMA_GET_HT_FLAG_INDEX(&sai_drv->dma));
-    __HAL_DMA_CLEAR_FLAG (&sai_drv->dma, __HAL_DMA_GET_TE_FLAG_INDEX(&sai_drv->dma));
-    __HAL_DMA_CLEAR_FLAG (&sai_drv->dma, __HAL_DMA_GET_DME_FLAG_INDEX(&sai_drv->dma));
-    __HAL_DMA_CLEAR_FLAG (&sai_drv->dma, __HAL_DMA_GET_FE_FLAG_INDEX(&sai_drv->dma));
-    __HAL_DMA_ENABLE_IT(&sai_drv->dma, DMA_IT_TC);
+    __HAL_DMA_CLEAR_FLAG (&sai_drv->hdma, __HAL_DMA_GET_TC_FLAG_INDEX(&sai_drv->hdma));
+    __HAL_DMA_CLEAR_FLAG (&sai_drv->hdma, __HAL_DMA_GET_HT_FLAG_INDEX(&sai_drv->hdma));
+    __HAL_DMA_CLEAR_FLAG (&sai_drv->hdma, __HAL_DMA_GET_TE_FLAG_INDEX(&sai_drv->hdma));
+    __HAL_DMA_CLEAR_FLAG (&sai_drv->hdma, __HAL_DMA_GET_DME_FLAG_INDEX(&sai_drv->hdma));
+    __HAL_DMA_CLEAR_FLAG (&sai_drv->hdma, __HAL_DMA_GET_FE_FLAG_INDEX(&sai_drv->hdma));
+    __HAL_DMA_ENABLE_IT(&sai_drv->hdma, DMA_IT_TC);
 
     sai_drv->func = func;
 }
@@ -311,7 +309,7 @@ void sai_start(sai_unit_t sai)
 		return;
 	}
 
-    __HAL_DMA_ENABLE(&sai_drv->dma);
+    __HAL_DMA_ENABLE(&sai_drv->hdma);
     __HAL_SAI_ENABLE(&sai_drv->handle);
     SET_BIT(sai_drv->handle.Instance->CR1, SAI_xCR1_DMAEN);
 }
@@ -325,20 +323,18 @@ void sai_stop(sai_unit_t sai)
 		return;
 	}
 
-    __HAL_DMA_DISABLE(&sai_drv->dma);
+    __HAL_DMA_DISABLE(&sai_drv->hdma);
     HAL_SAI_DMAStop(&sai_drv->handle);
 }
 
-static void sai_dma_irq_handle(sai_unit_t sai)
+static void sai_dma_irq_handle(sai_drv_t *sai_drv)
 {
-    sai_drv_t *sai_drv = sai_select(sai);
-
 	if (sai_drv == NULL)
 	{
 		return;
 	}
 
-    DMA_HandleTypeDef *hdma = &sai_drv->dma;
+    DMA_HandleTypeDef *hdma = &sai_drv->hdma;
     sai_dma_base_t *base = (sai_dma_base_t *)hdma->StreamBaseAddress;
     cb_arg_t func = sai_drv->func;
 
@@ -365,16 +361,16 @@ static void sai_dma_irq_handle(sai_unit_t sai)
     }
 }
 
-#if SAIA_DMA_EN
+#if SAIA_EN == 1 && SAIA_DMA_EN == 1
 void SAIA_DMA_IRQHANDLER(void)
 {   	
-    sai_dma_irq_handle(SAI_UNIT_A);						 
+    sai_dma_irq_handle(&saia_drv);						 
 } 
 #endif 
 
-#if SAIB_DMA_EN
+#if SAIB_EN == 1 && SAIB_DMA_EN == 1
 void SAIB_DMA_IRQHANDLER(void)
 {   
-    sai_dma_irq_handle(SAI_UNIT_B);		
+    sai_dma_irq_handle(&saib_drv);		
 }  
 #endif

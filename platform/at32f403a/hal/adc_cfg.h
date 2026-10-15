@@ -1,7 +1,7 @@
 #ifndef ADC_CFG_H
 #define ADC_CFG_H
 
-#define ADC1_EN 1
+#define ADC1_EN 0
 #define ADC2_EN 0
 #define ADC3_EN 0 
 

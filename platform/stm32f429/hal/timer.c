@@ -2,7 +2,7 @@
 
 typedef struct
 {
-    TIM_TypeDef *tim;
+    TIM_TypeDef *instance;
     IRQn_Type irq;         
 } timer_map_t;
 
@@ -24,7 +24,7 @@ static const timer_map_t timer_map_table[] =
     {TIM14, TIM8_TRG_COM_TIM14_IRQn},
 };
 
-static cb_t timer_cb[TMR_UNIT_MAX];
+static cb_t timer_cb[TIMER_UNIT_MAX];
 
 static void time_factorization(uint32_t time, uint32_t clock, uint16_t *pPeriod, uint16_t *pPrescaler) 
 {
@@ -53,7 +53,7 @@ static void time_factorization(uint32_t time, uint32_t clock, uint16_t *pPeriod,
     *pPrescaler = prescaler;
 }
 
-void timer_init(tmr_unit_t timer, uint32_t time, uint32_t irqp, cb_t func)
+void timer_init(timer_unit_t timer, uint32_t time, uint32_t irqp, cb_t func)
 {
     uint16_t period = 0;
     uint16_t prescaler = 0;
@@ -61,27 +61,27 @@ void timer_init(tmr_unit_t timer, uint32_t time, uint32_t irqp, cb_t func)
 
     switch (timer)
     {
-        case TMR_UNIT_1 : __HAL_RCC_TIM1_CLK_ENABLE(); break;
-        case TMR_UNIT_2 : __HAL_RCC_TIM2_CLK_ENABLE(); break;
-        case TMR_UNIT_3 : __HAL_RCC_TIM3_CLK_ENABLE(); break;
-        case TMR_UNIT_4 : __HAL_RCC_TIM4_CLK_ENABLE(); break;
-        case TMR_UNIT_5 : __HAL_RCC_TIM5_CLK_ENABLE(); break;
-        case TMR_UNIT_6 : __HAL_RCC_TIM6_CLK_ENABLE(); break;
-        case TMR_UNIT_7 : __HAL_RCC_TIM7_CLK_ENABLE(); break;
-        case TMR_UNIT_8 : __HAL_RCC_TIM8_CLK_ENABLE(); break;
-        case TMR_UNIT_9 : __HAL_RCC_TIM9_CLK_ENABLE(); break;
-        case TMR_UNIT_10 : __HAL_RCC_TIM10_CLK_ENABLE(); break;
-        case TMR_UNIT_11 : __HAL_RCC_TIM11_CLK_ENABLE(); break;
-        case TMR_UNIT_12 : __HAL_RCC_TIM12_CLK_ENABLE(); break;
-        case TMR_UNIT_13 : __HAL_RCC_TIM13_CLK_ENABLE(); break;
-        case TMR_UNIT_14 : __HAL_RCC_TIM14_CLK_ENABLE(); break;
+        case TIMER_UNIT_1 : __HAL_RCC_TIM1_CLK_ENABLE(); break;
+        case TIMER_UNIT_2 : __HAL_RCC_TIM2_CLK_ENABLE(); break;
+        case TIMER_UNIT_3 : __HAL_RCC_TIM3_CLK_ENABLE(); break;
+        case TIMER_UNIT_4 : __HAL_RCC_TIM4_CLK_ENABLE(); break;
+        case TIMER_UNIT_5 : __HAL_RCC_TIM5_CLK_ENABLE(); break;
+        case TIMER_UNIT_6 : __HAL_RCC_TIM6_CLK_ENABLE(); break;
+        case TIMER_UNIT_7 : __HAL_RCC_TIM7_CLK_ENABLE(); break;
+        case TIMER_UNIT_8 : __HAL_RCC_TIM8_CLK_ENABLE(); break;
+        case TIMER_UNIT_9 : __HAL_RCC_TIM9_CLK_ENABLE(); break;
+        case TIMER_UNIT_10 : __HAL_RCC_TIM10_CLK_ENABLE(); break;
+        case TIMER_UNIT_11 : __HAL_RCC_TIM11_CLK_ENABLE(); break;
+        case TIMER_UNIT_12 : __HAL_RCC_TIM12_CLK_ENABLE(); break;
+        case TIMER_UNIT_13 : __HAL_RCC_TIM13_CLK_ENABLE(); break;
+        case TIMER_UNIT_14 : __HAL_RCC_TIM14_CLK_ENABLE(); break;
         default : return; break;
     }
 
     const timer_map_t *map = &timer_map_table[timer];
 
     time_factorization(time, SystemCoreClock, &period, &prescaler);
-    htim.Instance = map->tim;
+    htim.Instance = map->instance;
     htim.Init.Prescaler = prescaler - 1;
     htim.Init.CounterMode = TIM_COUNTERMODE_UP;
     htim.Init.Period = period - 1;
@@ -98,15 +98,15 @@ void timer_init(tmr_unit_t timer, uint32_t time, uint32_t irqp, cb_t func)
     timer_cb[timer] = func; 
 }
 
-void timer_cmd(tmr_unit_t timer, bool en)
+void timer_cmd(timer_unit_t timer, bool en)
 {
     if (en)
     {
-        SET_BIT(timer_map_table[timer].tim->CR1, TIM_CR1_CEN);
+        SET_BIT(timer_map_table[timer].instance->CR1, TIM_CR1_CEN);
     }
     else
     {
-        CLEAR_BIT(timer_map_table[timer].tim->CR1, TIM_CR1_CEN);
+        CLEAR_BIT(timer_map_table[timer].instance->CR1, TIM_CR1_CEN);
     }
 }
 

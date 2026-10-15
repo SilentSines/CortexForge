@@ -1,7 +1,7 @@
 #ifndef UART_CFG_H
 #define UART_CFG_H
 
-#define UART1_EN 1 /* USART1 */
+#define UART1_EN 0 /* USART1 */
 #define UART2_EN 0 /* USART2 */
 #define UART3_EN 0 /* USART3 */
 #define UART4_EN 0 /* UART4 */

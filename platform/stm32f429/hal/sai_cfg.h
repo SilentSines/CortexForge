@@ -81,9 +81,7 @@
 typedef struct
 {
     SAI_HandleTypeDef handle;
-    DMA_HandleTypeDef dma;
-    DMA_HandleTypeDef *hdma_tx;
-    DMA_HandleTypeDef *hdma_rx;
+    DMA_HandleTypeDef hdma;
     cb_arg_t func;
 } sai_drv_t;
 

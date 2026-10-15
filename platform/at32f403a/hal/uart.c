@@ -436,10 +436,9 @@ bool uart_rx_available(uart_unit_t uart)
 	return (count > 0) ? true : false;
 }
 
-static void uart_irq(uart_unit_t uart)
+static void uart_irq(uart_drv_t *uart_drv)
 {
 	uint8_t data;
-	uart_drv_t *uart_drv = uart_select(uart);
 
 	if (uart_drv == NULL)
 	{
@@ -497,56 +496,56 @@ static void uart_irq(uart_unit_t uart)
 #if UART1_EN == 1
 void USART1_IRQHandler(void)
 {
-	uart_irq(UART_UNIT_1);
+	uart_irq(&uart_drv1);
 }
 #endif
 
 #if UART2_EN == 1
 void USART2_IRQHandler(void)
 {
-	uart_irq(UART_UNIT_2);
+	uart_irq(&uart_drv2);
 }
 #endif
 
 #if UART3_EN == 1
 void USART3_IRQHandler(void)
 {
-	uart_irq(UART_UNIT_3);
+	uart_irq(&uart_drv3);
 }
 #endif
 
 #if UART4_EN == 1
 void UART4_IRQHandler(void)
 {
-	uart_irq(UART_UNIT_4);
+	uart_irq(&uart_drv4);
 }
 #endif
 
 #if UART5_EN == 1
 void UART5_IRQHandler(void)
 {
-	uart_irq(UART_UNIT_5);
+	uart_irq(&uart_drv5);
 }
 #endif
 
 #if UART6_EN == 1
 void USART6_IRQHandler(void)
 {
-	uart_irq(UART_UNIT_6);
+	uart_irq(&uart_drv6);
 }
 #endif
 
 #if UART7_EN == 1
 void UART7_IRQHandler(void)
 {
-	uart_irq(UART_UNIT_7);
+	uart_irq(&uart_drv7);
 }
 #endif
 
 #if UART8_EN == 1
 void UART8_IRQHandler(void)
 {
-	uart_irq(UART_UNIT_8);
+	uart_irq(&uart_drv8);
 }
 #endif
 

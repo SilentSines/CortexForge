@@ -506,11 +506,10 @@ void i2s_rx_stop(i2s_unit_t i2s)
     }
 }
 
-static void i2s_dma_irq_handle(i2s_unit_t i2s, bool is_tx)
+static void i2s_dma_irq_handle(i2s_drv_t *i2s_drv, bool is_tx)
 {
 	dma_channel_type *ch;
 	cb_arg_t func;
-	i2s_drv_t *i2s_drv = i2s_select(i2s);
 
 	if (i2s_drv == NULL)
 	{
@@ -539,58 +538,58 @@ static void i2s_dma_irq_handle(i2s_unit_t i2s, bool is_tx)
 	}
 }
 
-#if I2S1_DMA_TX_EN
+#if I2S1_EN == 1 && I2S1_DMA_TX_EN == 1
 void I2S1_DMA_TX_IRQHANDLER(void)
 {
-	i2s_dma_irq_handle(I2S_UNIT_1, true);
+	i2s_dma_irq_handle(&i2s_drv1, true);
 }
 #endif
 
-#if I2S1_DMA_RX_EN
+#if I2S1_EN == 1 && I2S1_DMA_RX_EN == 1
 void I2S1_DMA_RX_IRQHANDLER(void)
 {
-	i2s_dma_irq_handle(I2S_UNIT_1, false);
+	i2s_dma_irq_handle(&i2s_drv1, false);
 }
 #endif
 
-#if I2S2_DMA_TX_EN
+#if I2S2_EN == 1 && I2S2_DMA_TX_EN == 1
 void I2S2_DMA_TX_IRQHANDLER(void)
 {
-	i2s_dma_irq_handle(I2S_UNIT_2, true);
+	i2s_dma_irq_handle(&i2s_drv2, true);
 }
 #endif
 
-#if I2S2_DMA_RX_EN
+#if I2S2_EN == 1 && I2S2_DMA_RX_EN == 1
 void I2S2_DMA_RX_IRQHANDLER(void)
 {
-	i2s_dma_irq_handle(I2S_UNIT_2, false);
+	i2s_dma_irq_handle(&i2s_drv2, false);
 }	
 #endif
 
-#if I2S3_DMA_TX_EN
+#if I2S3_EN == 1 && I2S3_DMA_TX_EN == 1
 void I2S3_DMA_TX_IRQHANDLER(void)
 {
-	i2s_dma_irq_handle(I2S_UNIT_3, true);
+	i2s_dma_irq_handle(&i2s_drv3, true);
 }
 #endif
 
-#if I2S3_DMA_RX_EN
+#if I2S3_EN == 1 && I2S3_DMA_RX_EN == 1
 void I2S3_DMA_RX_IRQHANDLER(void)
 {
-	i2s_dma_irq_handle(I2S_UNIT_3, false);
+	i2s_dma_irq_handle(&i2s_drv3, false);
 }
 #endif
 
-#if I2S4_DMA_TX_EN
+#if I2S4_EN == 1 && I2S4_DMA_TX_EN == 1
 void I2S4_DMA_TX_IRQHANDLER(void)
 {
-	i2s_dma_irq_handle(I2S_UNIT_4, true);
+	i2s_dma_irq_handle(&i2s_drv4, true);
 }
 #endif
 
-#if I2S4_DMA_RX_EN
+#if I2S4_EN == 1 && I2S4_DMA_RX_EN == 1
 void I2S4_DMA_RX_IRQHANDLER(void)
 {
-	i2s_dma_irq_handle(I2S_UNIT_4, false);
+	i2s_dma_irq_handle(&i2s_drv4, false);
 }
 #endif

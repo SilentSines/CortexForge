@@ -567,10 +567,9 @@ bool spi_is_busy(spi_unit_t spi)
 	return spi_drv->busy;
 }
 
-static void spi_dma_irq_handle(spi_unit_t spi, bool is_tx)
+static void spi_dma_irq_handle(spi_drv_t *spi_drv, bool is_tx)
 {
 	uint16_t retry = 0xFFFF;
-	spi_drv_t *spi_drv = spi_select(spi);
 
 	if (spi_drv == NULL)
 	{
@@ -610,58 +609,58 @@ static void spi_dma_irq_handle(spi_unit_t spi, bool is_tx)
 	}
 }
 
-#if SPI1_DMA_TX_EN == 1
+#if SPI1_EN == 1 && SPI1_DMA_TX_EN == 1
 void SPI1_DMA_TX_IRQHANDLER(void)
 {
-	spi_dma_irq_handle(SPI_UNIT_1, true);
+	spi_dma_irq_handle(&spi_drv1, true);
 }
 #endif
 
-#if SPI1_DMA_RX_EN == 1
+#if SPI1_EN == 1 && SPI1_DMA_RX_EN == 1
 void SPI1_DMA_RX_IRQHANDLER(void)
 {
-	spi_dma_irq_handle(SPI_UNIT_1, false);
+	spi_dma_irq_handle(&spi_drv1, false);
 }
 #endif
 
-#if SPI2_DMA_TX_EN == 1
+#if SPI2_EN == 1 && SPI2_DMA_TX_EN == 1
 void SPI2_DMA_TX_IRQHANDLER(void)
 {
-	spi_dma_irq_handle(SPI_UNIT_2, true);
+	spi_dma_irq_handle(&spi_drv2, true);
 }
 #endif
 
-#if SPI2_DMA_RX_EN == 1
+#if SPI2_EN == 1 && SPI2_DMA_RX_EN == 1 
 void SPI2_DMA_RX_IRQHANDLER(void)
 {
-	spi_dma_irq_handle(SPI_UNIT_2, false);	
+	spi_dma_irq_handle(&spi_drv2, false);	
 }	
 #endif
 
-#if SPI3_DMA_TX_EN == 1
+#if SPI3_EN == 1 && SPI3_DMA_TX_EN == 1
 void SPI3_DMA_TX_IRQHANDLER(void)
 {
-	spi_dma_irq_handle(SPI_UNIT_3, true);
+	spi_dma_irq_handle(&spi_drv3, true);
 }
 #endif
 
-#if SPI3_DMA_RX_EN == 1
+#if SPI3_EN == 1 && SPI3_DMA_RX_EN == 1
 void SPI3_DMA_RX_IRQHANDLER(void)
 {
-	spi_dma_irq_handle(SPI_UNIT_3, false);
+	spi_dma_irq_handle(&spi_drv3, false);
 }
 #endif
 
-#if SPI4_DMA_TX_EN == 1
+#if SPI4_EN == 1 && SPI4_DMA_TX_EN == 1
 void SPI4_DMA_TX_IRQHANDLER(void)
 {
-	spi_dma_irq_handle(SPI_UNIT_4, true);
+	spi_dma_irq_handle(&spi_drv4, true);
 }
 #endif
 
-#if SPI4_DMA_RX_EN == 1
+#if SPI4_EN == 1 && SPI4_DMA_RX_EN == 1
 void SPI4_DMA_RX_IRQHANDLER(void)
 {
-	spi_dma_irq_handle(SPI_UNIT_4, false);
+	spi_dma_irq_handle(&spi_drv4, false);
 }
 #endif

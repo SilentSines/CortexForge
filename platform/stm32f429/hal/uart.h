@@ -13,7 +13,7 @@ typedef enum
     UART_UNIT_8, /* UART8  */
 } uart_unit_t;
 
-void uart_init(uart_unit_t uart, uint32_t baud, uint32_t irqp);
+void uart_bus_init(uart_unit_t uart, uint32_t baud, uint32_t irqp);
 void uart_send(uart_unit_t uart, const uint8_t *buf, uint32_t size);
 void uart_send_byte(uart_unit_t uart, uint8_t data);
 uint32_t uart_recv(uart_unit_t uart, uint8_t *buf, uint32_t size);

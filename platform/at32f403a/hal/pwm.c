@@ -227,14 +227,13 @@ void pwm_init(pwm_pin_t pin, uint32_t res, uint32_t freq, pwm_polarity_t polarit
 void pwm_set_freq(pwm_pin_t pin, uint32_t freq)
 {
     uint32_t arr, psc;
-    tmr_type *tmr;
 
     if (pin >= PWM_PIN_MAX)
     {
         return;
     }
 
-    tmr = pwm_map_table[pin].tmr;
+    tmr_type *tmr = pwm_map_table[pin].tmr;
     arr = tmr_period_value_get(tmr) + 1;
     if (arr == 0 || freq == 0 || (arr * freq) > SystemCoreClock)
     {
@@ -260,7 +259,6 @@ void pwm_set_duty(pwm_pin_t pin, uint32_t duty)
 
 void pwm_start(pwm_pin_t pin)
 {
-    tmr_type *tmr;
     tmr_channel_select_type tmr_channel;
 
     if (pin >= PWM_PIN_MAX)
@@ -269,7 +267,7 @@ void pwm_start(pwm_pin_t pin)
     }
 
     const pwm_map_t *map = &pwm_map_table[pin];
-    tmr = map->tmr;
+    tmr_type *tmr = map->tmr;
 
     tmr_channel = (tmr_channel_select_type)(map->channel + map->invert);
     tmr_channel_enable(tmr, tmr_channel, TRUE);
@@ -279,7 +277,6 @@ void pwm_start(pwm_pin_t pin)
 
 void pwm_stop(pwm_pin_t pin)
 {
-    tmr_type *tmr;
     tmr_channel_select_type tmr_channel;
 
     if (pin >= PWM_PIN_MAX)
@@ -288,7 +285,7 @@ void pwm_stop(pwm_pin_t pin)
     }
 
     const pwm_map_t *map = &pwm_map_table[pin];
-    tmr = map->tmr;
+    tmr_type *tmr = map->tmr;
 
     tmr_channel = (tmr_channel_select_type)(map->channel + map->invert);
     tmr_channel_enable(tmr, tmr_channel, FALSE);

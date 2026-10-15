@@ -1,7 +1,7 @@
 #ifndef SPI_CFG_H
 #define SPI_CFG_H
 
-#define SPI1_EN 1
+#define SPI1_EN 0
 #define SPI2_EN 0
 #define SPI3_EN 0 
 #define SPI4_EN 0 
@@ -13,7 +13,7 @@
 /***************************/
 
 /********SPI1 DMA TX SEL********/
-#define SPI1_DMA_TX_EN  1
+#define SPI1_DMA_TX_EN  0
 #define SPI1_DMA_TX_IRQ_PRIORITY 10
 
 #define SPI1_DMA_TX             DMA1

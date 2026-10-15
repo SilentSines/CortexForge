@@ -89,7 +89,7 @@ static uart_drv_t* uart_select(uart_unit_t uart)
     }
 }
 
-void uart_init(uart_unit_t uart, uint32_t baud, uint32_t irqp)
+void uart_bus_init(uart_unit_t uart, uint32_t baud, uint32_t irqp)
 {
 	IRQn_Type irq;
 	uint32_t tx_pin, rx_pin;
@@ -200,7 +200,7 @@ void uart_init(uart_unit_t uart, uint32_t baud, uint32_t irqp)
 						#endif	
 							break;	
 	
-		default : return;
+		default : return; break;
 	}
 	
 	gpio_pin_init(tx_pin, GPIO_AF_PP, tx_af);
@@ -279,6 +279,7 @@ uint32_t uart_recv(uart_unit_t uart, uint8_t *buf, uint32_t size)
 	{
 		return 0;
 	}
+	
     CRITICAL_SECTION(count = uart_drv->rx_count);
     recv_len = (count < size) ? count : size;
     for (i = 0; i < recv_len; i++) 
@@ -407,10 +408,9 @@ bool uart_rx_available(uart_unit_t uart)
 	return (count > 0) ? true : false;
 }
 
-static void uart_irq(uart_unit_t uart)
+static void uart_irq(uart_drv_t *uart_drv)
 {
 	uint8_t data;
-	uart_drv_t *uart_drv = uart_select(uart);
 
 	if (uart_drv == NULL)
 	{
@@ -471,56 +471,56 @@ static void uart_irq(uart_unit_t uart)
 #if UART1_EN == 1
 void USART1_IRQHandler(void)
 {
-	uart_irq(UART_UNIT_1);
+	uart_irq(&uart_drv1);
 }
 #endif
 
 #if UART2_EN == 1
 void USART2_IRQHandler(void)
 {
-	uart_irq(UART_UNIT_2);
+	uart_irq(&uart_drv2);
 }
 #endif
 
 #if UART3_EN == 1
 void USART3_IRQHandler(void)
 {
-	uart_irq(UART_UNIT_3);
+	uart_irq(&uart_drv3);
 }
 #endif
 
 #if UART4_EN == 1
 void UART4_IRQHandler(void)
 {
-	uart_irq(UART_UNIT_4);
+	uart_irq(&uart_drv4);
 }
 #endif
 
 #if UART5_EN == 1
 void UART5_IRQHandler(void)
 {
-	uart_irq(UART_UNIT_5);
+	uart_irq(&uart_drv5);
 }
 #endif
 
 #if UART6_EN == 1
 void USART6_IRQHandler(void)
 {
-	uart_irq(UART_UNIT_6);
+	uart_irq(&uart_drv6);
 }
 #endif
 
 #if UART7_EN == 1
 void UART7_IRQHandler(void)
 {
-	uart_irq(UART_UNIT_7);
+	uart_irq(&uart_drv7);
 }
 #endif
 
 #if UART8_EN == 1
 void UART8_IRQHandler(void)
 {
-	uart_irq(UART_UNIT_8);
+	uart_irq(&uart_drv8);
 }
 #endif
 

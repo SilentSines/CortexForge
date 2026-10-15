@@ -8,15 +8,12 @@
 #if FLASH_WRITE_SIZE == 2
     typedef uint16_t flash_data_t;
     #define FLASH_DATA_MASK  0xFFFF
-    #define FLASH_PRO_TYPE  FLASH_TYPEPROGRAM_HALFWORD
 #elif FLASH_WRITE_SIZE == 4
     typedef uint32_t flash_data_t;
     #define FLASH_DATA_MASK  0xFFFFFFFF
-    #define FLASH_PRO_TYPE  FLASH_TYPEPROGRAM_WORD
 #elif FLASH_WRITE_SIZE == 8
     typedef uint64_t flash_data_t;
     #define FLASH_DATA_MASK  0xFFFFFFFFFFFFFFFF
-    #define FLASH_PRO_TYPE  FLASH_TYPEPROGRAM_DOUBLEWORD
 #else
     #error "Unsupported FLASH_WRITE_SIZE (must be 1, 2, 4, or 8)"
 #endif

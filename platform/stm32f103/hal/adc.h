@@ -1,0 +1,60 @@
+#ifndef ADC_H
+#define ADC_H
+
+#define ADC_SAMPLE_INVALID  0xFFFF
+
+typedef enum
+{
+    ADC_UNIT_1,
+    ADC_UNIT_2,
+    ADC_UNIT_3,
+} adc_unit_t;
+
+typedef enum
+{
+    ADC123_CH0_PA0,
+    ADC123_CH1_PA1,
+    ADC123_CH2_PA2,
+    ADC123_CH3_PA3,
+
+    ADC12_CH4_PA4,
+    ADC12_CH5_PA5,
+    ADC12_CH6_PA6,
+    ADC12_CH7_PA7,
+    ADC12_CH8_PB0,
+    ADC3_CH4_PF6,
+    ADC3_CH5_PF7,
+    ADC3_CH6_PF8,
+    ADC3_CH7_PF9,
+    ADC3_CH8_PF10,
+
+    ADC12_CH9_PB1,
+
+    ADC123_CH10_PC0,
+    ADC123_CH11_PC1,
+    ADC123_CH12_PC2,
+    ADC123_CH13_PC3,
+
+    ADC12_CH14_PC4,
+    ADC12_CH15_PC5,
+
+    ADC_CH_MAX,
+} adc_ch_t;
+
+typedef enum 
+{
+    ADC_SAMPLE_TIME_FASTEST,
+    ADC_SAMPLE_TIME_FAST,
+    ADC_SAMPLE_TIME_MEDIUM,
+    ADC_SAMPLE_TIME_SLOW,
+    ADC_SAMPLE_TIME_SLOWEST,
+} adc_sample_time_t;
+
+void adc_init(adc_unit_t adc, bool scan_en);
+void adc_setup_channel(adc_ch_t ch);
+uint16_t adc_sample_one(adc_unit_t adc, adc_ch_t ch, adc_sample_time_t sample_time);
+void adc_dma_config(adc_unit_t adc, adc_ch_t *ch, uint8_t ch_num, adc_sample_time_t sample_time);
+void adc_dma_start(adc_unit_t adc, uint16_t *buf, uint32_t len, cb_t func);
+void adc_dma_stop(adc_unit_t adc);
+
+#endif

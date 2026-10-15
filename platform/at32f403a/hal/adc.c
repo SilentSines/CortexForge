@@ -289,10 +289,8 @@ void adc_dma_stop(adc_unit_t adc)
     adc_drv->sampling = false;
 }
 
-static void adc_dma_irq_handle(adc_unit_t adc)
+static void adc_dma_irq_handle(adc_drv_t *adc_drv)
 {
-    adc_drv_t *adc_drv = adc_select(adc);
-
     if (adc_drv == NULL)
 	{
 		return;
@@ -311,23 +309,23 @@ static void adc_dma_irq_handle(adc_unit_t adc)
     }
 }
 
-#if ADC1_DMA_EN == 1
+#if ADC1_EN == 1 && ADC1_DMA_EN == 1
 void ADC1_DMA_IRQHANDLER(void)
 {
-	adc_dma_irq_handle(ADC_UNIT_1);
+	adc_dma_irq_handle(&adc_drv1);
 }
 #endif
 
-#if ADC2_DMA_EN == 1
+#if ADC2_EN == 1 && ADC2_DMA_EN == 1
 void ADC2_DMA_IRQHANDLER(void)
 {
-	adc_dma_irq_handle(ADC_UNIT_2);
+	adc_dma_irq_handle(&adc_drv2);
 }
 #endif
 
-#if ADC3_DMA_EN == 1
+#if ADC3_EN == 1 && ADC3_DMA_EN == 1
 void ADC3_DMA_IRQHANDLER(void)
 {
-	adc_dma_irq_handle(ADC_UNIT_3);
+	adc_dma_irq_handle(&adc_drv3);
 }
 #endif
