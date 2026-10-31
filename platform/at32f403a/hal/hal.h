@@ -21,18 +21,18 @@
 typedef void (*cb_t)(void);           
 typedef void (*cb_arg_t)(void*);
 
-#include "systick.h"
-#include "gpio.h"
-#include "dma.h"
-#include "uart.h"
-#include "wdt.h"    
-#include "timer.h"
-#include "pwm.h"
 #include "adc.h"
+#include "dma.h"
 #include "flash.h"
-#include "i2c.h"
-#include "spi.h"
+#include "gpio.h"
+#include "i2c.h"    
 #include "i2s.h"
+#include "pwm.h"
+#include "spi.h"
+#include "systick.h"
+#include "timer.h"
+#include "uart.h"
+#include "wdt.h"
 
 void hal_init(void);
 void hal_error_handler(void);

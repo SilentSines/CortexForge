@@ -449,12 +449,12 @@ void UART5__RQHandler(void)
 }
 #endif
 
-#ifdef STDIO_COM
+#ifdef STDIO_UART
 #ifdef ARM
 int fputc(int ch, FILE *f)
 {
 	UNUSED(f);
-	uart_send_byte(STDIO_COM, ch);
+	uart_send_byte(STDIO_UART, ch);
 	return ch;
 }
 
@@ -463,14 +463,14 @@ int fgetc(FILE *f)
 	uint8_t data;
 
 	UNUSED(f);
-	while (uart_recv_byte(STDIO_COM, &data) == false);
+	while (uart_recv_byte(STDIO_UART, &data) == false);
 	return data;
 }
 #elif defined(GCC)
 int _write( int file, char *ptr, int len)
 {
     UNUSED(file); 
-    uart_send(STDIO_COM, ptr, len);
+    uart_send(STDIO_UART, ptr, len);
 	return len;
 }
 
@@ -480,7 +480,7 @@ int _read(int file, char *ptr, int len)
 	int total = len;
 	while (total > 0)
 	{
-		int recv_len = uart_recv(STDIO_COM, ptr, total);
+		int recv_len = uart_recv(STDIO_UART, ptr, total);
 		total -= recv_len;
 		ptr += recv_len;
 	}

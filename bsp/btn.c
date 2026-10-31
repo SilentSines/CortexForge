@@ -4,15 +4,11 @@
 #define BTN_FILTER_TIME 30 
 #define BTN_FIFO_SIZE 10	
 
-typedef enum
-{
-	BTN_NONE = 0,
-	BTN_PRESS,	 
-	BTN_RELEASE, 
-	BTN_LONG,		 
-	BTN_SHORT,	
-	BTN_EVEN_MAX = BTN_SHORT,
-} btn_event_t;
+#define BTN_PRESS     1
+#define BTN_RELEASE   2
+#define BTN_LONG      3
+#define BTN_SHORT     4
+#define BTN_EVEN_MAX  4
 
 typedef struct
 {
@@ -22,24 +18,26 @@ typedef struct
 	uint16_t long_time;	 
 	uint16_t repeat_cnt; 
 	uint16_t repeat_speed; 
-} btn_cfg_t;
+#if BTN_USE_CALLBACK == 1
+	btn_cb_t cb;
+#endif
+} btn_dev_t;
 
 static const gpio_pin_t btn_pin_table[BTN_NUM] =
 {
 	GPIO_PB9,
 };
 
-static btn_cfg_t btn[BTN_NUM] =
-{
-	{BTN_STATE_RELEASE, 0, 0, 1000, 0, 0}, 
-}; 
+static btn_dev_t btn[BTN_NUM]; 
 
+#if BTN_USE_FIFO
 static struct
 {
 	uint8_t buf[BTN_FIFO_SIZE]; 
 	__IO uint8_t read;							
 	__IO uint8_t write;							
-} btn_fifo;			 
+} btn_fifo;	
+#endif		 
 
 static btn_state_t btn_pin_active(uint8_t id)
 {
@@ -61,6 +59,156 @@ void btn_init(void)
 	} 
 }
 
+void btn_monitor(void)
+{
+	btn_dev_t *dev;
+	uint8_t i;
+
+	for (i = 0; i < BTN_NUM; i++)
+	{
+		dev = &btn[i];
+		if (btn_pin_active(i)) 
+		{
+			if (dev->filter_cnt < BTN_FILTER_TIME)
+			{
+				dev->filter_cnt = BTN_FILTER_TIME;
+			}
+			else if (dev->filter_cnt < 2 * BTN_FILTER_TIME)
+			{
+				dev->filter_cnt += BTN_COUNT_BASE;
+			}
+			else
+			{
+				if (dev->state == BTN_STATE_RELEASE)
+				{
+					dev->state = BTN_STATE_PRESS;
+
+				#if BTN_USE_FIFO
+					btn_put_event((uint8_t)(BTN_EVEN_MAX * i + BTN_PRESS));
+				#endif
+
+				#if BTN_USE_CALLBACK
+					if (dev->cb)
+					{
+						dev->cb(BTN_PRESS);
+					}
+				#endif
+				}
+				if (dev->long_time > 0)
+				{
+					if (dev->long_cnt < dev->long_time)
+					{
+						dev->long_cnt += BTN_COUNT_BASE;
+						if (dev->long_cnt == dev->long_time)
+						{
+						#if BTN_USE_FIFO
+							btn_put_event((uint8_t)(BTN_EVEN_MAX * i + BTN_LONG));
+						#endif
+
+						#if BTN_USE_CALLBACK
+							if (dev->cb)
+							{
+								dev->cb(BTN_LONG);
+							}
+						#endif
+						}
+					}
+					else
+					{
+						if (dev->repeat_speed > 0)
+						{
+							dev->repeat_cnt += BTN_COUNT_BASE;
+							if (dev->repeat_cnt >= dev->repeat_speed)
+							{
+								dev->repeat_cnt = 0;
+
+							#if BTN_USE_FIFO
+								btn_put_event((uint8_t)(BTN_EVEN_MAX * i + BTN_PRESS));
+							#endif
+
+							#if BTN_USE_CALLBACK
+								if (dev->cb)
+								{
+									dev->cb(BTN_PRESS);
+								}
+							#endif
+							}
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			if (dev->filter_cnt > BTN_FILTER_TIME)
+			{
+				dev->filter_cnt = BTN_FILTER_TIME;
+			}
+			else if (dev->filter_cnt != 0)
+			{
+				dev->filter_cnt -= BTN_COUNT_BASE;
+			}
+			else
+			{
+				if (dev->state == BTN_STATE_PRESS)
+				{
+					dev->state = BTN_STATE_RELEASE;
+					if ((dev->long_time) && (dev->long_cnt < dev->long_time))
+					{
+					#if BTN_USE_FIFO
+						btn_put_event((uint8_t)(BTN_EVEN_MAX * i + BTN_SHORT));
+					#endif
+
+					#if BTN_USE_CALLBACK
+						if (dev->cb)
+						{
+							dev->cb(BTN_SHORT);
+						}
+					#endif
+					}
+
+				#if BTN_USE_FIFO	
+					btn_put_event((uint8_t)(BTN_EVEN_MAX * i + BTN_RELEASE));
+				#endif
+
+				#if BTN_USE_CALLBACK
+					if (dev->cb)
+					{
+						dev->cb(BTN_RELEASE);
+					}
+				#endif
+
+					dev->long_cnt = 0;
+					dev->repeat_cnt = 0;
+				}
+			}
+		}
+	}
+}
+
+btn_state_t btn_get_state(btn_id_t id)
+{
+	if (id >= BTN_NUM)
+	{
+		return BTN_RELEASE;
+	}
+	
+	return btn[id].state;
+}
+
+void btn_set_cfg(btn_id_t id, uint16_t long_time, uint16_t repeat_speed)
+{
+	if (id >= BTN_NUM)
+	{
+		return;
+	}
+
+	btn[id].long_time = long_time;			
+	btn[id].repeat_speed = repeat_speed; 
+	btn[id].repeat_cnt = 0;			
+}
+
+#if BTN_USE_FIFO == 1
 void btn_put_event(uint8_t event)
 {
 	btn_fifo.buf[btn_fifo.write] = event;
@@ -89,97 +237,20 @@ uint8_t btn_get_event(void)
 	}
 }
 
-btn_state_t btn_get_state(btn_id_t id)
-{
-	return btn[id].state;
-}
-
-void btn_set_cfg(btn_id_t id, uint16_t long_time, uint16_t repeat_speed)
-{
-	btn[id].long_time = long_time;			
-	btn[id].repeat_speed = repeat_speed; 
-	btn[id].repeat_cnt = 0;			
-}
-
 void btn_clr_fifo(void)
 {
 	btn_fifo.read = btn_fifo.write;
 }
+#endif
 
-void btn_monitor(void)
+#if BTN_USE_CALLBACK == 1
+void btn_register_cb(btn_id_t id, btn_cb_t cb)
 {
-	btn_cfg_t *temp;
-	uint8_t i;
-
-	for (i = 0; i < BTN_NUM; i++)
+	if (id >= BTN_NUM)
 	{
-		temp = &btn[i];
-		if (btn_pin_active(i)) 
-		{
-			if (temp->filter_cnt < BTN_FILTER_TIME)
-			{
-				temp->filter_cnt = BTN_FILTER_TIME;
-			}
-			else if (temp->filter_cnt < 2 * BTN_FILTER_TIME)
-			{
-				temp->filter_cnt += BTN_COUNT_BASE;
-			}
-			else
-			{
-				if (temp->state == BTN_STATE_RELEASE)
-				{
-					temp->state = BTN_STATE_PRESS;
-					btn_put_event((uint8_t)(BTN_EVEN_MAX * i + BTN_PRESS));
-				}
-				if (temp->long_time > 0)
-				{
-					if (temp->long_cnt < temp->long_time)
-					{
-						temp->long_cnt += BTN_COUNT_BASE;
-						if (temp->long_cnt == temp->long_time)
-						{
-							btn_put_event((uint8_t)(BTN_EVEN_MAX * i + BTN_LONG));
-						}
-					}
-					else
-					{
-						if (temp->repeat_speed > 0)
-						{
-							temp->repeat_cnt += BTN_COUNT_BASE;
-							if (temp->repeat_cnt >= temp->repeat_speed)
-							{
-								temp->repeat_cnt = 0;
-								btn_put_event((uint8_t)(BTN_EVEN_MAX * i + BTN_PRESS));
-							}
-						}
-					}
-				}
-			}
-		}
-		else
-		{
-			if (temp->filter_cnt > BTN_FILTER_TIME)
-			{
-				temp->filter_cnt = BTN_FILTER_TIME;
-			}
-			else if (temp->filter_cnt != 0)
-			{
-				temp->filter_cnt -= BTN_COUNT_BASE;
-			}
-			else
-			{
-				if (temp->state == BTN_STATE_PRESS)
-				{
-					temp->state = BTN_STATE_RELEASE;
-					if ((temp->long_time) && (temp->long_cnt < temp->long_time))
-					{
-						btn_put_event((uint8_t)(BTN_EVEN_MAX * i + BTN_SHORT));
-					}
-					btn_put_event((uint8_t)(BTN_EVEN_MAX * i + BTN_RELEASE));
-					temp->long_cnt = 0;
-					temp->repeat_cnt = 0;
-				}
-			}
-		}
+		return;
 	}
+
+	btn[id].cb = cb;
 }
+#endif

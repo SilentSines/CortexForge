@@ -6,17 +6,14 @@
 #include "log.h"
 #include "basic_lib.h"
 
-#include "led.h"
 #include "bat.h"
 #include "btn.h"
 #include "encoder.h"
 #include "ir.h"
-#include "wm8978.h"
-#include "kt_tx.h"
-#include "kt_rx.h"
-
-#include "tft.h"
+#include "led.h"
 #include "oled.h"
+#include "tft.h"
+#include "wm8978.h"
 
 void bsp_init(void);
 

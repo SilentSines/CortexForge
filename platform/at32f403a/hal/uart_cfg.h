@@ -10,7 +10,7 @@
 #define UART7_EN 0 /* UART7 */
 #define UART8_EN 0 /* UART8 */
 
-// #define STDIO_COM UART_UNIT_2 // printf fun
+// #define STDIO_UART UART_UNIT_2 // printf fun
 
 /****************UART1 CONFIG****************/
 #define UART1_TX_BUF_SIZE	1024

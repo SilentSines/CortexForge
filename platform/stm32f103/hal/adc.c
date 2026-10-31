@@ -355,21 +355,21 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
     adc_drv->sampling = false;
 }
 
-#if ADC1_DMA_EN == 1
+#if ADC1_EN == 1 && ADC1_DMA_EN == 1
 void ADC1_DMA_IRQHANDLER(void)
 {
 	HAL_DMA_IRQHandler(&adc1_dma);
 }
 #endif
 
-#if ADC2_DMA_EN == 1
+#if ADC2_EN == 1 && ADC2_DMA_EN == 1
 void ADC2_DMA_IRQHANDLER(void)
 {
 	HAL_DMA_IRQHandler(&adc2_dma);
 }
 #endif
 
-#if ADC3_DMA_EN == 1
+#if ADC3_EN == 1 && ADC3_DMA_EN == 1
 void ADC3_DMA_IRQHANDLER(void)
 {
 	HAL_DMA_IRQHandler(&adc3_dma);
